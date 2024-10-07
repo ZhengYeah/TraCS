@@ -67,7 +67,7 @@ def kRR(value, vals, epsilon):
     """
     the k-random response
     :param value: current value
-    :param values: the possible value
+    :param vals: the possible value
     :param epsilon: privacy budget
     :return:
     """
@@ -80,8 +80,14 @@ def kRR(value, vals, epsilon):
 
 
 def square_wave_mechanism(poi_idx, R, epsilon):
+    """
+    :param poi_idx: the index of the current poi
+    :param R: max trajectory radius
+    :return: perturbed R
+    """
     delta = max(poi_distance_matrix[poi_idx])
     t = R / delta
+
     b = (epsilon * (np.e ** (epsilon)) - np.e ** epsilon + 1) / (
                 2 * np.e ** (epsilon) * (np.e ** epsilon - 1 - epsilon))
     x = random.uniform(0, 1)
@@ -93,13 +99,20 @@ def square_wave_mechanism(poi_idx, R, epsilon):
             perturbed_t = random.uniform(- b, - b + t)
         else:
             perturbed_t = random.uniform(b + t, b + 1)
+
     perturbed_t = (perturbed_t + b) / (2 * b + 1)
     perturbed_t = perturbed_t * delta
-
     return perturbed_t
 
-
+# TODO: what is the meaning of "support"?
 def find_this_direc_support_of_this_poi(this_poi, this_poi_direc, poi_angel_num_matrix_adap):
+    """
+
+    :param this_poi:
+    :param this_poi_direc:
+    :param poi_angel_num_matrix_adap:
+    :return:
+    """
     this_poi_direc_num_line = poi_angel_num_matrix_adap[this_poi]
     this_direc_support_array = np.argwhere(this_poi_direc_num_line == this_poi_direc).reshape(-1)
 
@@ -171,20 +184,27 @@ def sigmoid(x):
 
 def ATP_mechanism(traj, epsilon, poi_angel_num_matrix_adap, poi_angel_num_adap_list, epsilon_direct_rate=0.75,
                   kRR_exp_kRR=False, traj_idx=None):
+    """
+    :param traj:
+    :param poi_angel_num_matrix_adap:
+    :param poi_angel_num_adap_list:
+    :param epsilon_direct_rate:
+    :param kRR_exp_kRR:
+    :param traj_idx:
+    :return:
+    """
     epsilon_traj_center_rate = 0.25
     assert traj_idx != None
     epsilon_direction = epsilon * epsilon_direct_rate * 0.75 / (len(traj) - 1)
     epsilon_traj_center = epsilon * epsilon_traj_center_rate * 0.25
     epsilon_for_d1 = epsilon * epsilon_traj_center_rate * 0.75
-    epsilon_per_poi = (epsilon - epsilon * 0.75 * epsilon_direct_rate - epsilon * epsilon_traj_center_rate) / (
-        len(traj))
+    epsilon_per_poi = (epsilon - epsilon * 0.75 * epsilon_direct_rate - epsilon * epsilon_traj_center_rate) / (len(traj))
 
     traj_array = []
     for this_poi_str in traj:
         traj_array.append(str2index_dict[this_poi_str])
 
-    traj_center_nearest_poi = str2index_dict \
-        [Exp_mechanism([traj_center_list[traj_idx]], epsilon_traj_center)[0]]
+    traj_center_nearest_poi = str2index_dict[Exp_mechanism([traj_center_list[traj_idx]], epsilon_traj_center)[0]]
 
     R_2 = max(poi_distance_matrix[traj_center_nearest_poi][traj_array])
 
