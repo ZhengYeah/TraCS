@@ -27,6 +27,7 @@ class PiecewiseMechanism:
             sampled = random.uniform(l, r) + self.private_val
         else:
             sampled = random.uniform(0, l) if random.uniform(0, 1) < 0.5 else random.uniform(r, 2 * pi)
+            sampled += self.private_val
         return sampled % (2 * pi)
 
     def linear_perturbation(self) -> "float":
@@ -37,69 +38,54 @@ class PiecewiseMechanism:
         assert 0 <= self.private_val <= 1
         C = (exp ** (self.epsilon / 2) - 1) / (2 * exp ** self.epsilon - 2)
         assert 0 < C
+        p = exp ** (self.epsilon / 2)
         tmp = random.uniform(0, 1)
-        if tmp < 2 * C:
-            if self.private_val
-
-
+        if tmp < 2 * C * p:
+            if C <= self.private_val <= 1 - C:
+                sampled = random.uniform(self.private_val - C, self.private_val + C)
+            elif self.private_val < C:
+                sampled = random.uniform(0, 2 * C)
+            else:
+                sampled = random.uniform(1 - 2 * C, 1)
+        else:
+            if C <= self.private_val <= 1 - C:
+                left_proportion = (self.private_val - C) / (1 - 2 * C)
+                sampled = random.uniform(0, self.private_val - C) if random.uniform(0, 1) < left_proportion else random.uniform(self.private_val + C, 1)
+            elif self.private_val < C:
+                sampled = random.uniform(0, self.private_val + C)
+            else:
+                sampled = random.uniform(self.private_val - C, 1)
+        return sampled
 
     def square_wave_mechanism(self):
         """
         the square wave mechanism
         :return:
         """
-
+        pass
 
 
 class DiscreteMechanism:
-    def __init__(self, private_val, epsilon, vals_domain: int):
+    def __init__(self, private_val, epsilon, total_num: int):
         self.private_val = private_val
         self.epsilon = epsilon
-        self.vals_domain = vals_domain
+        self.total_num = total_num
 
-    def kRR(self, value, vals, epsilon):
+    def krr(self) -> "int":
         """
-        the k-random response
-        :param value: current value
-        :param vals: the possible value
-        :param epsilon: privacy budget
-        :return:
+        the k-RR mechanism
         """
-        values = vals.copy()
-        p = np.e ** epsilon / (np.e ** epsilon + len(values) - 1)
-        if np.random.random() < p:
-            return value
-        values.remove(value)
-        return values[np.random.randint(low=0, high=len(values))]
+        assert 0 <= self.private_val < self.total_num
+        p = 1 / (self.total_num + 1) * (exp ** self.epsilon)
+        tmp = random.uniform(0, 1)
+        if tmp < p:
+            return random.randint(0, self.total_num)
+        else:
+            return self.private_val
 
     def exponential_mechanism(self):
         """
         the exponential mechanism
         :return:
         """
-        return self.kRR(self.private_val, self.vals_domain, self.epsilon)
-
-
-
-
-
-
-
-def square_wave_mechanism(poi_idx, R, epsilon):
-    delta = max(poi_distance_matrix[poi_idx])
-    t = R / delta
-    b = (epsilon * (np.e ** (epsilon)) - np.e ** epsilon + 1) / (
-                2 * np.e ** (epsilon) * (np.e ** epsilon - 1 - epsilon))
-    x = random.uniform(0, 1)
-    if x < (2 * b * np.e ** epsilon) / (2 * b * np.e ** epsilon + 1):
-        perturbed_t = random.uniform(- b + t, b + t)
-    else:
-        x_1 = random.uniform(0, 1)
-        if x_1 <= t:
-            perturbed_t = random.uniform(- b, - b + t)
-        else:
-            perturbed_t = random.uniform(b + t, b + 1)
-    perturbed_t = (perturbed_t + b) / (2 * b + 1)
-    perturbed_t = perturbed_t * delta
-
-    return perturbed_t
+        pass

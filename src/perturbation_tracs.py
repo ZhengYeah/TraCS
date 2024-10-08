@@ -1,23 +1,35 @@
 import numpy as np
 import random
 
-from src.ldp_mechanisms import DiscreteMechanism
+from src.ldp_mechanisms import PiecewiseMechanism
 
 
 class DirectionDistancePerturbation:
-    def __init__(self, location, ref_location):
+    def __init__(self, location: tuple, ref_location: tuple, epsilon):
+        """
+        :param location: represented by a pair of coordinates in [0, 1]^2
+        """
+        assert len(location) == 2 and len(ref_location) == 2
         self.location = location
         self.ref_location = ref_location
-        self.direction = None
-        self.distance = None
+        self.epsilon = epsilon
+        self.perturbed_direction = None
+        self.perturbed_distance = None
 
     def direction_perturbation(self):
         """
         perturb the location in the direction
         :return: perturbed location
         """
-        self.location = self.location + self.direction * self.distance
-        return self.location
+        # private direction
+        phi = np.arctan2(self.location[1] - self.ref_location[1], self.location[0] - self.ref_location[0])
+        assert -np.pi <= phi <= np.pi
+        # perturb the direction
+        perturbation = PiecewiseMechanism(phi, self.epsilon)
+        self.perturbed_direction = perturbation.circular_perturbation()
+
+
+
 
     def distance_at_phi(self, phi):
         """
@@ -25,7 +37,7 @@ class DirectionDistancePerturbation:
         :param phi: the angle
         :return: the distance
         """
-        return np.dot(self.direction, self.location) / np.cos(phi)
+        return np.dot(self.pertubed_direction, self.location) / np.cos(phi)
 
     def distance_perturbation(self, epsilon):
         """
