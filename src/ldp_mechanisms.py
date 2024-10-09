@@ -60,7 +60,6 @@ class PiecewiseMechanism:
     def square_wave_mechanism(self):
         """
         the square wave mechanism
-        :return:
         """
         pass
 
@@ -86,6 +85,5 @@ class DiscreteMechanism:
     def exponential_mechanism(self):
         """
         the exponential mechanism
-        :return:
         """
         pass

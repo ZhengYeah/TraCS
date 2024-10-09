@@ -1,24 +1,17 @@
-def gps_to_unit_square(gps, epsilon):
+def gps_to_unit_square(x, y, x_min: float, x_max: float, y_min: float, y_max: float):
     """
-    the transformation from GPS to unit square
-    :param gps: the GPS coordinate
-    :param epsilon: privacy budget
-    :return:
+    transform GPS coordinates to unit-square coordinates
     """
-    x, y = gps
-    x = kRR(x, [0, 1], epsilon)
-    y = kRR(y, [0, 1], epsilon)
-    return x, y
+    assert len(x) == len(y)
+    x_length = x_max - x_min
+    y_length = y_max - y_min
+    return (x - x_min) / x_length, (y - y_min) / y_length
 
 
-def unit_square_to_gps(unit_square, epsilon):
+def unit_square_to_gps(x_bar, y_bar, x_min: float, x_max: float, y_min: float, y_max: float):
     """
-    the transformation from unit square to GPS
-    :param unit_square: the unit square coordinate
-    :param epsilon: privacy budget
-    :return:
+    transform unit square coordinates to GPS coordinates
     """
-    x, y = unit_square
-    x = kRR(x, [0, 1], epsilon)
-    y = kRR(y, [0, 1], epsilon)
-    return x, y
+    x_length = x_max - x_min
+    y_length = y_max - y_min
+    return x_bar * x_length + x_min, y_bar * y_length + y_min
