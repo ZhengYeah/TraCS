@@ -24,10 +24,10 @@ class PiecewiseMechanism:
         # sample from \mechanism(\pi, \epsilon)
         tmp = random.uniform(0, 1)
         if tmp < p_epsilon * (r - l):
-            sampled = random.uniform(l, r) + self.private_val
+            sampled = random.uniform(l, r) - pi + self.private_val
         else:
             sampled = random.uniform(0, l) if random.uniform(0, 1) < 0.5 else random.uniform(r, 2 * pi)
-            sampled += self.private_val
+            sampled = sampled - pi + self.private_val
         return sampled % (2 * pi)
 
     def linear_perturbation(self) -> "float":
@@ -50,11 +50,11 @@ class PiecewiseMechanism:
         else:
             if C <= self.private_val <= 1 - C:
                 left_proportion = (self.private_val - C) / (1 - 2 * C)
-                sampled = random.uniform(0, self.private_val - C) if random.uniform(0, 1) < left_proportion else random.uniform(self.private_val + C, 1)
+                sampled = random.uniform(0, self.private_val - C) if random.uniform(0, 1) <= left_proportion else random.uniform(self.private_val + C, 1)
             elif self.private_val < C:
-                sampled = random.uniform(0, self.private_val + C)
+                sampled = random.uniform(2 * C, 1)
             else:
-                sampled = random.uniform(self.private_val - C, 1)
+                sampled = random.uniform(0, 1 - 2 * C)
         return sampled
 
     def square_wave_mechanism(self):
@@ -87,3 +87,8 @@ class DiscreteMechanism:
         the exponential mechanism
         """
         pass
+
+
+if __name__ == "__main__":
+    mechanism = PiecewiseMechanism(0, 1)
+    print(mechanism.linear_perturbation())
