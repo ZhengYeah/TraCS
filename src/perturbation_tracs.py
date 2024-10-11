@@ -10,14 +10,13 @@ class DirectionDistancePerturbation:
         :param location: represented by a pair of coordinates in [0, 1]^2
         """
         assert len(location) == 2 and len(ref_location) == 2
+        self.ref_location = ref_location
         self.location = location
         self.perturbed_location = None
-        self.ref_location = ref_location
         self.epsilon = epsilon
         self.private_direction = None
-        self.private_distance = None
+        self.private_distance_space = None
         self.perturbed_direction = None
-        self.perturbed_distance = None
 
     # private methods
     def _direction_perturbation(self):
@@ -29,18 +28,10 @@ class DirectionDistancePerturbation:
             self.perturbed_direction = 0
             return
         # private direction
-        # arc tangent has a valid range of [0, \pi / 2]
-        # so there are four cases, depending on the location of the reference and the private location
-        if self.location[0] >= self.ref_location[0] and self.location[1] >= self.ref_location[1]:
-            self.private_direction = np.arctan2(self.location[1] - self.ref_location[1], self.location[0] - self.ref_location[0])
-        elif self.location[0] < self.ref_location[0] and self.location[1] >= self.ref_location[1]:
-            self.private_direction = pi - np.arctan2(self.location[1] - self.ref_location[1], self.ref_location[0] - self.location[0])
-        elif self.location[0] < self.ref_location[0] and self.location[1] < self.ref_location[1]:
-            self.private_direction = pi + np.arctan2(self.ref_location[1] - self.location[1], self.ref_location[0] - self.location[0])
-        elif self.location[0] >= self.ref_location[0] and self.location[1] < self.ref_location[1]:
-            self.private_direction = 2 * pi - np.arctan2(self.ref_location[1] - self.location[1], self.location[0] - self.ref_location[0])
-        else:
-            raise ValueError("Invalid private direction")
+        # arctan2 has a range of [-pi, pi], so we need to convert it to [0, 2pi)
+        self.private_direction = np.arctan2(self.location[1] - self.ref_location[1], self.location[0] - self.ref_location[0])
+        if self.private_direction < 0:
+            self.private_direction += 2 * pi
         assert 0 <= self.private_direction <= 2 * pi
         # perturb the direction
         perturbation = PiecewiseMechanism(self.private_direction, self.epsilon / 2)
@@ -50,24 +41,25 @@ class DirectionDistancePerturbation:
         """
         perturb the distance (r(\varphi) to r'(\varphi') in the paper)
         """
-        # arc tangent of the private direction, necessary to use only the [0, 2\pi) range
+        # arctan2 has a range of [-pi, pi], so we need to convert it to [0, 2pi)
         phi_1 = np.arctan2(1 - self.ref_location[1], 1 - self.ref_location[0])
-        phi_2 = pi - np.arctan2(1 - self.ref_location[1], self.location[0])
-        phi_3 = pi + np.arctan2(self.ref_location[1], self.ref_location[0])
-        phi_4 = 2 * pi - np.arctan2(self.location[1], 1 - self.location[0])
+        phi_2 = np.arctan2(1 - self.ref_location[1], self.location[0])
+        phi_3 = np.arctan2(self.ref_location[1], self.ref_location[0]) + 2 * pi
+        phi_4 = np.arctan2(self.location[1], 1 - self.location[0]) + 2 * pi
         if 0 <= self.private_direction < phi_1:
-            private_distance_space = (1 - self.ref_location[0]) / np.cos(self.private_direction)
+            self.private_distance_space = (1 - self.ref_location[0]) / np.cos(self.private_direction)
         elif phi_1 <= self.private_direction < phi_2:
-            private_distance_space = (1 - self.ref_location[1]) / np.sin(self.private_direction)
+            self.private_distance_space = (1 - self.ref_location[1]) / np.sin(self.private_direction)
         elif phi_2 <= self.private_direction < phi_3:
-            private_distance_space = self.ref_location[0] / np.cos(self.private_direction)
+            self.private_distance_space = self.ref_location[0] / np.cos(self.private_direction)
         elif phi_3 <= self.private_direction < phi_4:
-            private_distance_space = self.ref_location[1] / np.sin(self.private_direction)
+            self.private_distance_space = self.ref_location[1] / np.sin(self.private_direction)
         else:
             raise ValueError("The private direction is out of range")
 
         # normalize the private distance
-        normalized_private_distance = self.private_distance / private_distance_space
+        private_distance = np.sqrt((self.location[0] - self.ref_location[0]) ** 2 + (self.location[1] - self.ref_location[1]) ** 2)
+        normalized_private_distance = private_distance / self.private_distance_space
         assert 0 <= normalized_private_distance <= 1
         # perturb the distance
         perturbation = PiecewiseMechanism(normalized_private_distance, self.epsilon / 2)
@@ -120,8 +112,9 @@ class CoordinatePerturbation:
 
 
 if __name__ == "__main__":
-    ref_location, location = (0.5, 0.5), (0.6, 0.6)
     epsilon = 2
-    perturbation = DirectionDistancePerturbation(location, ref_location, epsilon)
+    # test case 1
+    ref_location, location = (0.5, 0.5), (0.4, 0.7)
+    perturbation = DirectionDistancePerturbation(ref_location, location, epsilon)
     perturbation._direction_perturbation()
     print(perturbation.private_direction)
