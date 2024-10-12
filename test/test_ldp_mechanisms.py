@@ -13,7 +13,7 @@ def test_circular_perturbation_func(private_val, epsilon):
     ref_r = (private_val + pi * (exp ** (epsilon / 2) - 1) / (exp ** epsilon - 1)) % (2 * pi)
     ref_p_epsilon = 1 / (2 * pi) * (exp ** (epsilon / 2)) * (2 * pi * (exp ** (epsilon / 2) - 1) / (exp ** epsilon - 1))
     counter = 0
-    for i in range(2000):
+    for _ in range(2000):
         perturbed = PiecewiseMechanism(private_val, epsilon).circular_perturbation()
         assert 0 <= perturbed <= 2 * pi
         if ref_l > ref_r:
@@ -34,7 +34,7 @@ def test_linear_perturbation_func(private_val, epsilon):
     p = exp ** (epsilon / 2)
     ref_p_epsilon = 2 * C * p
     counter = 0
-    for i in range(2000):
+    for _ in range(2000):
         perturbed = PiecewiseMechanism(private_val, epsilon).linear_perturbation()
         assert 0 <= perturbed <= 1
         if private_val < C:
@@ -49,6 +49,3 @@ def test_linear_perturbation_func(private_val, epsilon):
     # print()
     # print(f"statistical frequency of [{private_val - C}, {private_val + C}]: {counter / 2000}; expected: {ref_p_epsilon}")
     assert abs(counter / 2000 - ref_p_epsilon) < 0.05
-
-
-
