@@ -82,27 +82,31 @@ class DirectionDistancePerturbation:
     #         raise ValueError("The perturbed direction is out of range")
     #     self.perturbed_distance = normalized_perturbed_distance * perturbed_distance_space
 
+    @staticmethod
+    def get_distance_space(ref_location, direction):
+        # use parametric equations of the line to calculate the distance space
+        tmp_right, tmp_left, tmp_top, tmp_bottom = np.inf, np.inf, np.inf, np.inf
+        vec_direction = (np.cos(direction), np.sin(direction))
+        if vec_direction[0] >= 0:
+            tmp_right = (1 - ref_location[0]) / vec_direction[0]
+        if vec_direction[0] < 0:
+            tmp_left = ref_location[0] / -vec_direction[0]
+        if vec_direction[1] >= 0:
+            tmp_top = (1 - ref_location[1]) / vec_direction[1]
+        if vec_direction[1] < 0:
+            tmp_bottom = ref_location[1] / -vec_direction[1]
+        # select the minimum distance with parameter >= 0 (meaningful distance)
+        tmp = [tmp_right, tmp_left, tmp_top, tmp_bottom]
+        tmp = [i for i in tmp if i >= 0]
+        distance_space = min(tmp)
+        assert 0 <= distance_space <= np.sqrt(2)
+        return distance_space
+
     def _distance_perturbation(self):
         """
         perturb the distance (r(\varphi) to r'(\varphi') in the paper)
         """
-        # use parametric equations of the line
-        tmp_right, tmp_left, tmp_top, tmp_bottom = np.inf, np.inf, np.inf, np.inf
-        vec_private_direction = (np.cos(self.private_direction), np.sin(self.private_direction))
-        if vec_private_direction[0] >= 0:
-            tmp_right = (1 - self.ref_location[0]) / vec_private_direction[0]
-        if vec_private_direction[0] < 0:
-            tmp_left = self.ref_location[0] / -vec_private_direction[0]
-        if vec_private_direction[1] >= 0:
-            tmp_top = (1 - self.ref_location[1]) / vec_private_direction[1]
-        if vec_private_direction[1] < 0:
-            tmp_bottom = self.ref_location[1] / -vec_private_direction[1]
-        # select the minimum distance with parameter >= 0 (meaningful distance)
-        tmp = [tmp_right, tmp_left, tmp_top, tmp_bottom]
-        tmp = [i for i in tmp if i >= 0]
-        self.private_distance_space = min(tmp)
-        assert 0 <= self.private_distance_space <= np.sqrt(2)
-
+        self.private_distance_space = self.get_distance_space(self.ref_location, self.private_direction)
         # normalize the private distance
         private_distance = np.sqrt((self.location[0] - self.ref_location[0]) ** 2 + (self.location[1] - self.ref_location[1]) ** 2)
         normalized_private_distance = private_distance / self.private_distance_space
@@ -112,20 +116,7 @@ class DirectionDistancePerturbation:
         normalized_perturbed_distance = perturbation.linear_perturbation()
 
         # denormalize the perturbed distance according to the perturbed direction
-        tmp_right, tmp_left, tmp_top, tmp_bottom = np.inf, np.inf, np.inf, np.inf
-        vec_perturbed_direction = (np.cos(self.perturbed_direction), np.sin(self.perturbed_direction))
-        if vec_perturbed_direction[0] >= 0:
-            tmp_right = (1 - self.ref_location[0]) / vec_perturbed_direction[0]
-        if vec_perturbed_direction[0] < 0:
-            tmp_left = self.ref_location[0] / -vec_perturbed_direction[0]
-        if vec_perturbed_direction[1] >= 0:
-            tmp_top = (1 - self.ref_location[1]) / vec_perturbed_direction[1]
-        if vec_perturbed_direction[1] < 0:
-            tmp_bottom = self.ref_location[1] / -vec_perturbed_direction[1]
-        # select the minimum distance with parameter >= 0 (meaningful distance)
-        tmp = [tmp_right, tmp_left, tmp_top, tmp_bottom]
-        tmp = [i for i in tmp if i >= 0]
-        perturbed_distance_space = min(tmp)
+        perturbed_distance_space = self.get_distance_space(self.ref_location, self.perturbed_direction)
         assert 0 <= perturbed_distance_space <= np.sqrt(2)
         self.perturbed_distance = normalized_perturbed_distance * perturbed_distance_space
 
@@ -162,11 +153,11 @@ class CoordinatePerturbation:
         self.perturbed_location = (x, y)
 
 
-if __name__ == "__main__":
-    epsilon = 2
-    # test case 1
-    ref_location, location = (0.8736161875439702, 0.31987568053095894), (0.4309125951493439, 0.9731022863296187)
-    perturbation = DirectionDistancePerturbation(ref_location, location, epsilon)
-    perturbation._direction_perturbation()
-    perturbation._distance_perturbation()
-    print(perturbation.private_direction, perturbation.private_distance_space, perturbation.perturbed_direction, perturbation.perturbed_distance)
+# if __name__ == "__main__":
+#     epsilon = 2
+#     # test case 1
+#     ref_location, location = (0.8736161875439702, 0.31987568053095894), (0.4309125951493439, 0.9731022863296187)
+#     perturbation = DirectionDistancePerturbation(ref_location, location, epsilon)
+#     perturbation._direction_perturbation()
+#     perturbation._distance_perturbation()
+#     print(perturbation.private_direction, perturbation.private_distance_space, perturbation.perturbed_direction, perturbation.perturbed_distance)

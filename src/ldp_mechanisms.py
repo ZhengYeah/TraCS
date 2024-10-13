@@ -75,7 +75,7 @@ class DiscreteMechanism:
         the k-RR mechanism
         """
         assert 0 <= self.private_val < self.total_num
-        p = 1 / (self.total_num + 1) * (exp ** self.epsilon)
+        p = 1 / ((self.total_num - 1) + (exp ** self.epsilon))
         tmp = random.uniform(0, 1)
         if tmp < p:
             return random.randint(0, self.total_num)
@@ -89,6 +89,6 @@ class DiscreteMechanism:
         pass
 
 
-if __name__ == "__main__":
-    mechanism = PiecewiseMechanism(0, 1)
-    print(mechanism.linear_perturbation())
+# if __name__ == "__main__":
+#     mechanism = PiecewiseMechanism(0, 1)
+#     print(mechanism.linear_perturbation())

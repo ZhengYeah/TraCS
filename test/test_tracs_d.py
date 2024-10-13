@@ -82,7 +82,7 @@ def test_perturb(ref_location, location, epsilon):
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     for perturbed_location in set_perturbed_location:
-        ax.plot(*perturbed_location, 'ro')
+        ax.plot(*perturbed_location, 'ro')  # packing the tuple
     ax.plot(*location, 'bo')
     ax.plot(*ref_location, 'go')
     plt.show()

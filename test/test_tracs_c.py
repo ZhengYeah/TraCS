@@ -1,19 +1,23 @@
-from src.perturbation_tracs import DirectionDistancePerturbation
+import pytest
 import numpy as np
+from src.perturbation_tracs import CoordinatePerturbation
 
 pi = np.pi
 
 
-def test_direction_perturbation():
-    location = (0.5, 0.5)
-    ref_location = (0.5, 0.5)
-    epsilon = 1
-    perturbation = DirectionDistancePerturbation(location, ref_location, epsilon)
-    perturbation._direction_perturbation()
-    assert -np.pi <= perturbation.private_direction <= np.pi
-    assert 0 <= perturbation.perturbed_direction <= 2 * np.pi
-
-
-def test_distance_perturbation():
-    pass
-
+@pytest.mark.parametrize("location, epsilon", [((0.5, 0.5), 2),])
+def test_coordinate_perturbation(location, epsilon):
+    set_perturbed_location = set()
+    for _ in range(1000):
+        perturbation = CoordinatePerturbation(location, epsilon)
+        perturbation.perturb()
+        set_perturbed_location.add(perturbation.perturbed_location)
+    import matplotlib.pyplot as plt
+    plot = plt.figure()
+    ax = plot.add_subplot(111)
+    x, y = zip(*set_perturbed_location)
+    ax.plot(*location, 'ro')
+    ax.scatter(x, y)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    plt.show()
