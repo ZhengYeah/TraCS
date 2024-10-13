@@ -6,7 +6,7 @@ pi = np.pi
 
 
 @pytest.mark.parametrize("ref_location, location, epsilon", [((0.5, 0.5), (0.6, 0.6), 6),])
-def test_strawman(ref_location, location, epsilon):
+def test_strawman(ref_location, location, epsilon,):
     set_perturbed_location = set()
     for _ in range(1000):
         set_perturbed_location.add(strawman_perturbation(ref_location, location, epsilon))

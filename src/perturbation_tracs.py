@@ -5,7 +5,7 @@ pi = np.pi
 
 
 class DirectionDistancePerturbation:
-    def __init__(self, ref_location: tuple, location: tuple, epsilon):
+    def __init__(self, ref_location: tuple, location: tuple, epsilon, epsilon_d):
         """
         :param location: represented by a pair of coordinates in [0, 1]^2
         """
@@ -13,7 +13,7 @@ class DirectionDistancePerturbation:
         self.ref_location = ref_location
         self.location = location
         self.perturbed_location = None
-        self.epsilon = epsilon
+        self.epsilon, self.epsilon_d = epsilon, epsilon_d
         self.private_direction = None
         self.private_distance_space = None
         self.perturbed_direction = None
@@ -34,7 +34,7 @@ class DirectionDistancePerturbation:
             self.private_direction += 2 * pi
         assert 0 <= self.private_direction <= 2 * pi
         # perturb the direction
-        perturbation = PiecewiseMechanism(self.private_direction, self.epsilon / 2)
+        perturbation = PiecewiseMechanism(self.private_direction, self.epsilon_d)
         self.perturbed_direction = perturbation.circular_perturbation()
 
     # def _distance_perturbation(self):
@@ -112,7 +112,7 @@ class DirectionDistancePerturbation:
         normalized_private_distance = private_distance / self.private_distance_space
         assert 0 <= normalized_private_distance <= 1
         # perturb the distance
-        perturbation = PiecewiseMechanism(normalized_private_distance, self.epsilon / 2)
+        perturbation = PiecewiseMechanism(normalized_private_distance, self.epsilon - self.epsilon_d)
         normalized_perturbed_distance = perturbation.linear_perturbation()
 
         # denormalize the perturbed distance according to the perturbed direction
@@ -133,22 +133,22 @@ class DirectionDistancePerturbation:
 
 
 class CoordinatePerturbation:
-    def __init__(self, location: tuple, epsilon):
+    def __init__(self, location: tuple, epsilon, epsilon_1):
         """
         :param location: represented by a pair of coordinates in [0, 1]^2
         """
         assert len(location) == 2
         self.location = location
         self.perturbed_location = None
-        self.epsilon = epsilon
+        self.epsilon, self.epsilon_1 = epsilon, epsilon_1
 
     def perturb(self):
         """
         perturb the coordinates of the location
         """
-        perturbation = PiecewiseMechanism(self.location[0], self.epsilon)
+        perturbation = PiecewiseMechanism(self.location[0], self.epsilon_1)
         x = perturbation.linear_perturbation()
-        perturbation = PiecewiseMechanism(self.location[1], self.epsilon)
+        perturbation = PiecewiseMechanism(self.location[1], self.epsilon - self.epsilon_1)
         y = perturbation.linear_perturbation()
         self.perturbed_location = (x, y)
 

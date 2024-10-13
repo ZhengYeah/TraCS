@@ -8,8 +8,9 @@ pi = np.pi
 @pytest.mark.parametrize("location, epsilon", [((0.5, 0.5), 2),])
 def test_coordinate_perturbation(location, epsilon):
     set_perturbed_location = set()
+    epsilon_1 = epsilon / 2
     for _ in range(1000):
-        perturbation = CoordinatePerturbation(location, epsilon)
+        perturbation = CoordinatePerturbation(location, epsilon, epsilon_1)
         perturbation.perturb()
         set_perturbed_location.add(perturbation.perturbed_location)
     import matplotlib.pyplot as plt
