@@ -5,9 +5,9 @@ from src.perturbation_tracs import DirectionDistancePerturbation
 pi = np.pi
 
 
-def strawman_perturbation(ref_location: tuple, location: tuple, epsilon):
+def strawman_perturbation(ref_location: tuple, location: tuple, epsilon, x_max=1, y_max=1):
     epsilon_d = pi / (pi + 1) * epsilon
-    direction_distance = DirectionDistancePerturbation(ref_location, location, epsilon, epsilon_d)
+    direction_distance = DirectionDistancePerturbation(ref_location, location, epsilon, epsilon_d, x_max, y_max)
     direction_distance._direction_perturbation()
     private_sector = direction_distance.private_direction // (pi / 3)
     assert 0 <= private_sector <= 5
@@ -23,6 +23,6 @@ def strawman_perturbation(ref_location: tuple, location: tuple, epsilon):
 
     x = ref_location[0] + perturbed_distance * np.cos(perturbed_direction)
     y = ref_location[1] + perturbed_distance * np.sin(perturbed_direction)
-    assert 0 <= x <= 1 and 0 <= y <= 1
+    assert 0 <= x <= x_max and 0 <= y <= y_max
     return x, y
 

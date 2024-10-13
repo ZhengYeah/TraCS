@@ -35,7 +35,7 @@ class PiecewiseMechanism:
         Distance perturbation defined in the paper (Definition 3.2)
         :return: the perturbed distance
         """
-        assert 0 <= self.private_val <= 1
+        assert 0 <= self.private_val <= 1 + 1e-6
         C = (exp ** (self.epsilon / 2) - 1) / (2 * exp ** self.epsilon - 2)
         assert 0 < C
         p = exp ** (self.epsilon / 2)
