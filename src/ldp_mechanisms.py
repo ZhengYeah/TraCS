@@ -57,11 +57,34 @@ class PiecewiseMechanism:
                 sampled = random.uniform(0, 1 - 2 * C)
         return sampled
 
-    def square_wave_mechanism(self):
+    def sw_circular(self):
         """
-        the square wave mechanism
+        the redesigned square wave mechanism for circular perturbation
         """
         pass
+
+    def sw_linear(self) -> "float":
+        """
+        the redesigned square wave mechanism for linear perturbation
+        """
+        assert 0 <= self.private_val <= 1 + 1e-6
+        b = (self.epsilon * exp ** self.epsilon - exp ** self.epsilon + 1) / (
+                    2 * exp ** self.epsilon * (exp ** self.epsilon - 1 - self.epsilon))
+        assert 0 < b
+        p = exp ** self.epsilon / (2 * b * exp ** self.epsilon + 1)
+        # compress to [0, 1]
+        p = p * (1 + 2 * b)
+        l = self.private_val / (1 + 2 * b)
+        r = (self.private_val + 2 * b) / (1 + 2 * b)
+        tmp = random.uniform(0, 1)
+        if tmp < p * (r - l):
+            if l <= self.private_val <= r:
+                sampled = random.uniform(l, r)
+            elif self.private_val < l:
+                sampled = random.uniform(0, l)
+            else:
+                sampled = random.uniform(r, 1)
+
 
 
 class DiscreteMechanism:

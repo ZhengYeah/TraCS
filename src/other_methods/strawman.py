@@ -25,4 +25,3 @@ def strawman_perturbation(ref_location: tuple, location: tuple, epsilon, x_max=1
     y = ref_location[1] + perturbed_distance * np.sin(perturbed_direction)
     assert 0 <= x <= x_max and 0 <= y <= y_max
     return x, y
-
