@@ -49,3 +49,7 @@ def test_linear_perturbation_func(private_val, epsilon):
     # print()
     # print(f"statistical frequency of [{private_val - C}, {private_val + C}]: {counter / 2000}; expected: {ref_p_epsilon}")
     assert abs(counter / 2000 - ref_p_epsilon) < 0.05
+
+def test_sw_linear(private_val, epsilon):
+    # verify the probability
+    pass

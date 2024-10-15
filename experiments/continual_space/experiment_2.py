@@ -47,12 +47,12 @@ def direction_tracs_vs_strawman(epsilon, num_locations):
                                   abs(2 * pi - perturbed_direction - tracs_d.private_direction))
 
         # 12-RR
-        private_sector = tracs_d.private_direction // (pi / 6)
-        assert 0 <= private_sector <= 11
-        mechanism = DiscreteMechanism(private_sector, epsilon_d, 12)
+        private_sector = tracs_d.private_direction // (pi / 18)
+        assert 0 <= private_sector <= 35
+        mechanism = DiscreteMechanism(private_sector, epsilon_d, 36)
         perturbed_sector = mechanism.krr()
         uniform_sample = np.random.uniform(0, 1)
-        perturbed_direction = perturbed_sector * (pi / 6) + uniform_sample * (pi / 6)
+        perturbed_direction = perturbed_sector * (pi / 18) + uniform_sample * (pi / 18)
         error_strawman_12rr += min(abs(perturbed_direction - tracs_d.private_direction),
                                    abs(2 * pi - perturbed_direction - tracs_d.private_direction))
     return error_tracs_d / num_locations, error_strawman_3rr / num_locations, error_strawman_6rr / num_locations, error_strawman_12rr / num_locations
@@ -68,12 +68,12 @@ if __name__ == '__main__':
             error_strawman_6rr += direction_tracs_vs_strawman(epsilon, 100)[2]
             error_strawman_12rr += direction_tracs_vs_strawman(epsilon, 100)[3]
         print(f"epsilon: {epsilon}, tracs-d: {error_tracs_d / 1000}, strawman-3rr: {error_strawman_3rr / 1000}, strawman-6rr: {error_strawman_6rr / 1000}, strawman-12rr: {error_strawman_12rr / 1000}")
-        # save to csv
-        with open(f"./results/experiment_2.csv", "a") as f:
-            # header
-            if epsilon == 2:
-                # # clear the file
-                # f.seek(0)
-                # f.truncate()
-                f.write("epsilon,tracs_d, 3-RR, 6-RR, 12-RR\n")
-            f.write(f"{epsilon},{error_tracs_d / 1000},{error_strawman_3rr / 1000},{error_strawman_6rr / 1000},{error_strawman_12rr / 1000}\n")
+        # # save to csv
+        # with open(f"./results/experiment_2.csv", "a") as f:
+        #     # header
+        #     if epsilon == 2:
+        #         # # clear the file
+        #         # f.seek(0)
+        #         # f.truncate()
+        #         f.write("epsilon,tracs_d, 3-RR, 6-RR, 12-RR\n")
+        #     f.write(f"{epsilon},{error_tracs_d / 1000},{error_strawman_3rr / 1000},{error_strawman_6rr / 1000},{error_strawman_12rr / 1000}\n")

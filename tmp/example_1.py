@@ -1,8 +1,8 @@
 import math
 
 pi = math.pi
-bins = 6
-epsilon = 4
+bins = 12
+epsilon = 2
 varphi = pi / 6
 
 

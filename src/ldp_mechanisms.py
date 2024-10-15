@@ -74,6 +74,7 @@ class PiecewiseMechanism:
         p = exp ** self.epsilon / (2 * b * exp ** self.epsilon + 1)
         # compress to [0, 1]
         p = p * (1 + 2 * b)
+        assert abs(p - (exp ** self.epsilon - 1) / self.epsilon) < 1e-3
         l = self.private_val / (1 + 2 * b)
         r = (self.private_val + 2 * b) / (1 + 2 * b)
         tmp = random.uniform(0, 1)
@@ -101,7 +102,10 @@ class DiscreteMechanism:
         p = 1 / ((self.total_num - 1) + (exp ** self.epsilon))
         tmp = random.uniform(0, 1)
         if tmp < p:
-            return random.randint(0, self.total_num)
+            while True:
+                sampled = random.randint(0, self.total_num)
+                if sampled != self.private_val:
+                    return sampled
         else:
             return self.private_val
 
