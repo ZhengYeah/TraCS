@@ -1,8 +1,18 @@
 import numpy as np
 
 
-def l2_distance(traj1, traj2):
+def l2_distance(traj_1, traj_2):
     """
-    Compute the L2 distance between two trajectories
+    Compute the L2 distance between two locations in two trajectories
     """
-    return np.linalg.norm(np.array(traj1) - np.array(traj2))
+    sum_distance = 0
+    for i in range(len(traj_1)):
+        sum_distance += np.linalg.norm(traj_1[i] - traj_2[i])
+    return sum_distance
+
+
+def averaged_l2_distance(traj_1, traj_2):
+    """
+    Compute the averaged L2 distance between two locations in two trajectories
+    """
+    return l2_distance(traj_1, traj_2) / len(traj_1)

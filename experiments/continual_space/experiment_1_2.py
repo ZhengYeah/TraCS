@@ -2,7 +2,7 @@ import numpy as np
 from copy import deepcopy
 from src.other_methods.strawman import strawman_perturbation
 from src.utilities.generate_random_traj import generate_random_traj
-from src.utilities.trajectory_distance import l2_distance
+from src.utilities.trajectory_distance import averaged_l2_distance
 from src.perturbation_tracs import DirectionDistancePerturbation, CoordinatePerturbation
 
 pi = np.pi
@@ -38,7 +38,7 @@ def tracs_vs_strawman(epsilon, num_locations):
         ref_location_2 = (perturbed_trajectory_strawman[i][0], perturbed_trajectory_strawman[i][1])
         location_2 = (perturbed_trajectory_strawman[i + 1][0], perturbed_trajectory_strawman[i + 1][1])
         perturbed_trajectory_strawman[i + 1] = strawman_perturbation(ref_location_1, location_2, epsilon, x_max, y_max)
-    return l2_distance(trajectory, perturbed_trajectory_tracs_d), l2_distance(trajectory, perturbed_trajectory_strawman), l2_distance(trajectory[1:], perturbed_trajectory_tracs_c)
+    return averaged_l2_distance(trajectory, perturbed_trajectory_tracs_d), averaged_l2_distance(trajectory, perturbed_trajectory_strawman), averaged_l2_distance(trajectory[1:], perturbed_trajectory_tracs_c)
 
 
 if __name__ == '__main__':
