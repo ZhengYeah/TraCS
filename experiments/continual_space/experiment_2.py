@@ -1,7 +1,4 @@
 import numpy as np
-from copy import deepcopy
-from src.utilities.generate_random_traj import generate_random_traj
-from src.perturbation_tracs import DirectionDistancePerturbation
 from src.ldp_mechanisms import PiecewiseMechanism, DiscreteMechanism
 
 pi = np.pi
@@ -37,19 +34,16 @@ def direction_tracs_vs_strawman(epsilon):
     return error_tracs_d, error_strawman_3rr, error_strawman_6rr, error_strawman_12rr
 
 
-
-
-
 if __name__ == '__main__':
     for epsilon in [2, 4, 6, 8, 10]:
         error_tracs_d, error_strawman_6rr, error_strawman_3rr, error_strawman_12rr = 0, 0, 0, 0
-        for _ in range(100):
+        for _ in range(1000):
             # average error
             error_tracs_d += direction_tracs_vs_strawman(epsilon)[0]
             error_strawman_3rr += direction_tracs_vs_strawman(epsilon)[1]
             error_strawman_6rr += direction_tracs_vs_strawman(epsilon)[2]
             error_strawman_12rr += direction_tracs_vs_strawman(epsilon)[3]
-        print(f"epsilon: {epsilon}, tracs-d: {error_tracs_d / 100}, 3-RR: {error_strawman_3rr / 100}, 6-RR: {error_strawman_6rr / 100}, 12-RR: {error_strawman_12rr / 100}")
+        print(f"epsilon: {epsilon}, tracs-d: {error_tracs_d / 1000}, 3-RR: {error_strawman_3rr / 1000}, 6-RR: {error_strawman_6rr / 1000}, 12-RR: {error_strawman_12rr / 1000}")
         # # save to csv
         # with open(f"./results/experiment_2.csv", "a") as f:
         #     # header

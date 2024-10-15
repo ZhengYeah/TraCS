@@ -50,6 +50,43 @@ def test_linear_perturbation_func(private_val, epsilon):
     # print(f"statistical frequency of [{private_val - C}, {private_val + C}]: {counter / 2000}; expected: {ref_p_epsilon}")
     assert abs(counter / 2000 - ref_p_epsilon) < 0.05
 
+
+@pytest.mark.parametrize("private_val, epsilon", [(0, 1), (pi, 1), (2 * pi, 1), (0, 2), (pi, 2), (2 * pi, 2)])
+def test_sw_circular(private_val, epsilon):
+    p = (exp ** epsilon - 1) / epsilon / (2 * pi)
+    s = (exp ** epsilon * (epsilon - 1) + 1) / (2 * (exp ** epsilon - 1) ** 2)
+    ref_p_epsilon = p * s * 2
+    ref_l = (private_val - pi * s) % (2 * pi)
+    ref_r = (private_val + pi * s) % (2 * pi)
+    counter = 0
+    for _ in range(2000):
+        perturbed = PiecewiseMechanism(private_val, epsilon).sw_circular()
+        assert 0 <= perturbed <= 2 * pi
+        if ref_l > ref_r:
+            if ref_l <= perturbed <= 2 * pi or 0 <= perturbed <= ref_r:
+                counter += 1
+        else:
+            if ref_l <= perturbed <= ref_r:
+                counter += 1
+    assert abs(counter / 2000 - ref_p_epsilon) < 0.05
+
+
+@pytest.mark.parametrize("private_val, epsilon", [(0, 1), (1, 1), (0, 2), (1, 2), (0.2, 1), (0.5, 1)])
 def test_sw_linear(private_val, epsilon):
-    # verify the probability
-    pass
+    p = (exp ** epsilon - 1) / epsilon
+    C = (exp ** epsilon * (epsilon - 1) + 1) / (2 * (exp ** epsilon - 1) ** 2)
+    ref_p_epsilon = 2 * C * p
+    counter = 0
+    for _ in range(2000):
+        perturbed = PiecewiseMechanism(private_val, epsilon).sw_linear()
+        assert 0 <= perturbed <= 1
+        if private_val < C:
+            if 0 <= perturbed <= 2 * C:
+                counter += 1
+        elif private_val > 1 - C:
+            if 1 - 2 * C <= perturbed <= 1:
+                counter += 1
+        else:
+            if private_val - C <= perturbed <= private_val + C:
+                counter += 1
+    assert abs(counter / 2000 - ref_p_epsilon) < 0.05

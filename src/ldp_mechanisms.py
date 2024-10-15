@@ -57,35 +57,55 @@ class PiecewiseMechanism:
                 sampled = random.uniform(0, 1 - 2 * C)
         return sampled
 
-    def sw_circular(self):
+    def sw_circular(self) -> "float":
         """
         the redesigned square wave mechanism for circular perturbation
         """
-        pass
+        assert 0 <= self.private_val <= 2 * pi + 1e-6
+        p = (exp ** self.epsilon - 1) / self.epsilon / (2 * pi)
+        s = (exp ** self.epsilon * (self.epsilon - 1) + 1) / (exp ** self.epsilon - 1) ** 2
+        # insight: sample from \mechanism(\pi, \epsilon) and then add self.private_val to the sample
+        l = pi * (1 - s)
+        r = pi * (1 + s)
+        tmp = random.uniform(0, 1)
+        if tmp < p * 2 * s:
+            sampled = random.uniform(l, r) - pi + self.private_val
+        else:
+            sampled = random.uniform(0, l) if random.uniform(0, 1) < 0.5 else random.uniform(r, 2 * pi)
+            sampled = sampled - pi + self.private_val
+        return sampled % (2 * pi)
 
     def sw_linear(self) -> "float":
         """
         the redesigned square wave mechanism for linear perturbation
         """
         assert 0 <= self.private_val <= 1 + 1e-6
-        b = (self.epsilon * exp ** self.epsilon - exp ** self.epsilon + 1) / (
-                    2 * exp ** self.epsilon * (exp ** self.epsilon - 1 - self.epsilon))
-        assert 0 < b
-        p = exp ** self.epsilon / (2 * b * exp ** self.epsilon + 1)
-        # compress to [0, 1]
-        p = p * (1 + 2 * b)
-        assert abs(p - (exp ** self.epsilon - 1) / self.epsilon) < 1e-3
-        l = self.private_val / (1 + 2 * b)
-        r = (self.private_val + 2 * b) / (1 + 2 * b)
+        # b = (self.epsilon * exp ** self.epsilon - exp ** self.epsilon + 1) / (
+        #             2 * exp ** self.epsilon * (exp ** self.epsilon - 1 - self.epsilon))
+        # assert 0 < b
+        # p = exp ** self.epsilon / (2 * b * exp ** self.epsilon + 1)
+        # # compress to [0, 1]
+        # p = p * (1 + 2 * b)
+        # assert abs(p - (exp ** self.epsilon - 1) / self.epsilon) < 1e-3
+        p = (exp ** self.epsilon - 1) / self.epsilon
+        C = (exp ** self.epsilon * (self.epsilon - 1) + 1) / (2 * (exp ** self.epsilon - 1) ** 2)
         tmp = random.uniform(0, 1)
-        if tmp < p * (r - l):
-            if l <= self.private_val <= r:
-                sampled = random.uniform(l, r)
-            elif self.private_val < l:
-                sampled = random.uniform(0, l)
+        if tmp < p * 2 * C:
+            if C <= self.private_val <= 1 - C:
+                sampled = random.uniform(self.private_val - C, self.private_val + C)
+            elif self.private_val < C:
+                sampled = random.uniform(0, 2 * C)
             else:
-                sampled = random.uniform(r, 1)
-
+                sampled = random.uniform(1 - 2 * C, 1)
+        else:
+            if C <= self.private_val <= 1 - C:
+                left_proportion = (self.private_val - C) / (1 - 2 * C)
+                sampled = random.uniform(0, self.private_val - C) if random.uniform(0, 1) <= left_proportion else random.uniform(self.private_val + C, 1)
+            elif self.private_val < C:
+                sampled = random.uniform(2 * C, 1)
+            else:
+                sampled = random.uniform(0, 1 - 2 * C)
+        return sampled
 
 
 class DiscreteMechanism:
