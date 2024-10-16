@@ -37,19 +37,19 @@ def direction_tracs_vs_strawman(epsilon):
 if __name__ == '__main__':
     for epsilon in [2, 4, 6, 8, 10]:
         error_tracs_d, error_strawman_6rr, error_strawman_3rr, error_strawman_12rr = 0, 0, 0, 0
-        for _ in range(1000):
+        for _ in range(10000):
             # average error
             error_tracs_d += direction_tracs_vs_strawman(epsilon)[0]
             error_strawman_3rr += direction_tracs_vs_strawman(epsilon)[1]
             error_strawman_6rr += direction_tracs_vs_strawman(epsilon)[2]
             error_strawman_12rr += direction_tracs_vs_strawman(epsilon)[3]
-        print(f"epsilon: {epsilon}, tracs-d: {error_tracs_d / 1000}, 3-RR: {error_strawman_3rr / 1000}, 6-RR: {error_strawman_6rr / 1000}, 12-RR: {error_strawman_12rr / 1000}")
-        # # save to csv
-        # with open(f"./results/experiment_2.csv", "a") as f:
-        #     # header
-        #     if epsilon == 2:
-        #         # # clear the file
-        #         # f.seek(0)
-        #         # f.truncate()
-        #         f.write("epsilon,tracs_d, 3-RR, 6-RR, 12-RR\n")
-        #     f.write(f"{epsilon},{error_tracs_d / 1000},{error_strawman_3rr / 1000},{error_strawman_6rr / 1000},{error_strawman_12rr / 1000}\n")
+        print(f"epsilon: {epsilon}, tracs-d: {error_tracs_d / 10000}, 3-RR: {error_strawman_3rr / 10000}, 6-RR: {error_strawman_6rr / 10000}, 12-RR: {error_strawman_12rr / 10000}")
+        # save to csv
+        with open(f"./results/experiment_2.csv", "a") as f:
+            # header
+            if epsilon == 2:
+                # # clear the file
+                # f.seek(0)
+                # f.truncate()
+                f.write("epsilon,tracs_d,3-RR,6-RR,12-RR\n")
+            f.write(f"{epsilon},{error_tracs_d / 10000},{error_strawman_3rr / 10000},{error_strawman_6rr / 10000},{error_strawman_12rr / 10000}\n")

@@ -130,12 +130,12 @@ if __name__ == '__main__':
             distance_tracs_d += tracs_vs_sw(epsilon, 100)[0]
             distance_sw += tracs_vs_sw(epsilon, 100)[1]
         print(f"epsilon: {epsilon}, tracs-d: {distance_tracs_d / 1000}, sw: {distance_sw / 1000}")
-        # # save to csv
-        # with open(f"./results/experiment_1_1.csv", "a") as f:
-        #     # header
-        #     if epsilon == 2:
-        #         # # clear the file
-        #         # f.seek(0)
-        #         # f.truncate()
-        #         f.write("epsilon,tracs_d,strawman,tracs_c\n")
-        #     f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_strawman / 1000},{distance_tracs_c / 1000}\n")
+        # save to csv
+        with open(f"./results/experiment_3.csv", "a") as f:
+            # header
+            if epsilon == 2:
+                # # clear the file
+                # f.seek(0)
+                # f.truncate()
+                f.write("epsilon,tracs_d,sw\n")
+            f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_sw / 1000}\n")
