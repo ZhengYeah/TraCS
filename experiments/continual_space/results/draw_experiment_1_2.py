@@ -10,7 +10,7 @@ plt.rcParams["figure.figsize"] = (5, 5)
 # open the csv file
 df = pd.read_csv("./experiment_1_2.csv")
 # draw the plot
-plt.ylim(0, 3.2)
+plt.ylim(0, 5)
 plt.xticks([2, 4, 6, 8, 10])
 plt.plot(df["epsilon"], df["strawman"], label="Strawman", linestyle="--", color="black", marker="x")
 plt.plot(df["epsilon"], df["tracs_d"], label="TraCS-D", linestyle="-.", color="red", marker="o")

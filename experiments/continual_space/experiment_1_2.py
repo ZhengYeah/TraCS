@@ -6,7 +6,7 @@ from src.utilities.trajectory_distance import averaged_l2_distance
 from src.perturbation_tracs import DirectionDistancePerturbation, CoordinatePerturbation
 
 pi = np.pi
-x_max, y_max = 10, 10
+x_max, y_max = 5, 10
 
 
 def tracs_vs_strawman(epsilon, num_locations):
@@ -50,12 +50,12 @@ if __name__ == '__main__':
             distance_strawman += tracs_vs_strawman(epsilon, 100)[1]
             distance_tracs_c += tracs_vs_strawman(epsilon, 100)[2]
         print(f"epsilon: {epsilon}, tracs-d: {distance_tracs_d / 1000}, strawman: {distance_strawman / 1000}, tracs-c: {distance_tracs_c / 1000}")
-        # # save to csv
-        # with open(f"./results/experiment_1_2.csv", "a") as f:
-        #     # header
-        #     if epsilon == 2:
-        #         # # clear the file
-        #         # f.seek(0)
-        #         # f.truncate()
-        #         f.write("epsilon,tracs_d,strawman,tracs_c\n")
-        #     f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_strawman / 1000},{distance_tracs_c / 1000}\n")
+        # save to csv
+        with open(f"./results/experiment_1_2.csv", "a") as f:
+            # header
+            if epsilon == 2:
+                # # clear the file
+                # f.seek(0)
+                # f.truncate()
+                f.write("epsilon,tracs_d,strawman,tracs_c\n")
+            f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_strawman / 1000},{distance_tracs_c / 1000}\n")
