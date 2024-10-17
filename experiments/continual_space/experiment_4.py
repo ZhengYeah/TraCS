@@ -43,6 +43,5 @@ if __name__ == "__main__":
     ax.set_xticks([0, pi / 4, pi / 2, 3 * pi / 4, pi, 5 * pi / 4, 3 * pi / 2, 7 * pi / 4])
     ax.set_xticklabels(theta_labels)
 
-    # plt.savefig("./experiment_4_1.eps")
-    plt.savefig("./experiment_4_2.eps")
+    plt.savefig("./results/experiment_4.eps")
     plt.show()
