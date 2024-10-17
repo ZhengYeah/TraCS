@@ -16,14 +16,14 @@ def tracs_d_circular(location, epsilon):
     assert 0 <= location[0] <= 1 and 0 <= location[1] < 2 * pi
     # perturbation
     epsilon_d = pi / (pi + 1) * epsilon
-    perturbed_angle = PiecewiseMechanism(location[1], epsilon - epsilon_d).circular_perturbation()
-    perturbed_radius = PiecewiseMechanism(location[0], epsilon_d).linear_perturbation()
+    perturbed_angle = PiecewiseMechanism(location[1], epsilon_d).circular_perturbation()
+    perturbed_radius = PiecewiseMechanism(location[0], epsilon - epsilon_d).linear_perturbation()
     return perturbed_radius, perturbed_angle
 
 
 if __name__ == "__main__":
-    location = (0.8, pi / 4)
-    epsilon = 8
+    location = (0.5, pi)
+    epsilon = 5
     set_perturbed_location = set()
     for _ in range(50):
         set_perturbed_location.add(tracs_d_circular(location, epsilon))

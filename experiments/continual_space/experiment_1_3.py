@@ -8,13 +8,12 @@ from src.perturbation_tracs import DirectionDistancePerturbation, CoordinatePert
 pi = np.pi
 x_max, y_max = 2, 10
 
-
-def tracs_vs_strawman(epsilon, num_locations):
+def tracs_d_vs_tracs_c(epsilon, trajectory):
     """
     comparison of TRACS-D and Strawman on a random trajectory with n_points points
     """
-    trajectory = generate_random_traj(num_locations, x_max, y_max)
     # tracs-c
+    num_locations = len(trajectory)
     perturbed_trajectory_tracs_c = deepcopy(trajectory)
     epsilon_1 = epsilon / 2
     for i in range(num_locations):
@@ -42,20 +41,21 @@ def tracs_vs_strawman(epsilon, num_locations):
 
 
 if __name__ == '__main__':
+    trajectory = [(0.2, 1), (0.4, 1), (0.6, 1), (0.8, 1), (1, 1), (1.2, 1), (1.4, 1), (1.6, 1), (1.8, 1)]
     for epsilon in [2, 4, 6, 8, 10]:
         distance_tracs_d, distance_strawman, distance_tracs_c = 0, 0, 0
         for _ in range(1000):
             # average distance
-            distance_tracs_d += tracs_vs_strawman(epsilon, 100)[0]
-            distance_strawman += tracs_vs_strawman(epsilon, 100)[1]
-            distance_tracs_c += tracs_vs_strawman(epsilon, 100)[2]
+            distance_tracs_d += tracs_d_vs_tracs_c(epsilon, trajectory)[0]
+            distance_strawman += tracs_d_vs_tracs_c(epsilon, trajectory)[1]
+            distance_tracs_c +=tracs_d_vs_tracs_c(epsilon, trajectory)[2]
         print(f"epsilon: {epsilon}, tracs-d: {distance_tracs_d / 1000}, strawman: {distance_strawman / 1000}, tracs-c: {distance_tracs_c / 1000}")
         # save to csv
-        # with open(f"./results/experiment_1_2.csv", "a") as f:
-        #     # header
-        #     if epsilon == 2:
-        #         # # clear the file
-        #         # f.seek(0)
-        #         # f.truncate()
-        #         f.write("epsilon,tracs_d,strawman,tracs_c\n")
-        #     f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_strawman / 1000},{distance_tracs_c / 1000}\n")
+        with open(f"./results/experiment_1_3.csv", "a") as f:
+            # header
+            if epsilon == 2:
+                # # clear the file
+                # f.seek(0)
+                # f.truncate()
+                f.write("epsilon,tracs_d,strawman,tracs_c\n")
+            f.write(f"{epsilon},{distance_tracs_d / 1000},{distance_strawman / 1000},{distance_tracs_c / 1000}\n")
