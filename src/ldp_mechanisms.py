@@ -129,11 +129,30 @@ class DiscreteMechanism:
         else:
             return self.private_val
 
-    def exponential_mechanism(self):
+    def exp_mechanism_loc(self, location_list: "list"):
         """
-        the exponential mechanism
+        the exponential mechanism for location perturbation
         """
-        pass
+        assert self.private_val in location_list
+        length = len(location_list)
+        # score function matrix
+        score_matrix = np.zeros([length, length])
+        for i in range(length):
+            for j in range(length):
+                # l2 distance
+                score_matrix[i][j] = -np.linalg.norm(location_list[i] - location_list[j])
+        # sensitivity
+        sensitivity = max(score_matrix.flatten()) - min(score_matrix.flatten())
+        # probability array
+        p = np.zeros(length)
+        for i in range(length):
+            p[i] = exp ** (self.epsilon * score_matrix[i][self.private_val] / (2 * sensitivity))
+        p = p / sum(p)
+        # sample
+        tmp = random.uniform(0, 1)
+        for i in range(length):
+            if tmp < sum(p[:i + 1]):
+                return location_list[i]
 
 
 # if __name__ == "__main__":

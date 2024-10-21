@@ -90,3 +90,7 @@ def test_sw_linear(private_val, epsilon):
             if private_val - C <= perturbed <= private_val + C:
                 counter += 1
     assert abs(counter / 2000 - ref_p_epsilon) < 0.05
+
+
+def test_exp_mechanism_loc():
+    pass
