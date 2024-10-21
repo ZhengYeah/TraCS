@@ -9,29 +9,29 @@ def tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon):
     direction_1 = np.arctan2(private_loc[1] - loc_1[1], private_loc[0] - loc_1[0])
     if direction_1 < 0:
         direction_1 += 2 * pi
-    direction_2 = np.arctan2(loc_2[1] - private_loc[1], loc_2[0] - private_loc[0])
+    direction_2 = np.arctan2(private_loc[1] - loc_2[1], private_loc[0] - loc_2[0])
     if direction_2 < 0:
         direction_2 += 2 * pi
-    krr_granularity = 6
+    krr_granularity = 12
     krr_direction_1 = DiscreteMechanism(0, epsilon, krr_granularity).krr()
     krr_direction_2 = DiscreteMechanism(0, epsilon, krr_granularity).krr()
-    perturbed_sector_1 = ((direction_1 - pi / krr_granularity + krr_direction_1 * (2 * pi / krr_granularity)) % (2 * pi),
-                          (direction_1 + pi / krr_granularity + krr_direction_1 * (2 * pi / krr_granularity)) % (2 * pi))
-    perturbed_sector_2 = ((direction_2 - pi / krr_granularity + krr_direction_2 * (2 * pi / krr_granularity)) % (2 * pi),
-                            (direction_2 + pi / krr_granularity + krr_direction_2 * (2 * pi / krr_granularity)) % (2 * pi))
+    perturbed_sector_1 = ((direction_1 - pi / krr_granularity + krr_direction_1 * (2 * pi / krr_granularity)),
+                          (direction_1 + pi / krr_granularity + krr_direction_1 * (2 * pi / krr_granularity)))
+    perturbed_sector_2 = ((direction_2 - pi / krr_granularity + krr_direction_2 * (2 * pi / krr_granularity)),
+                          (direction_2 + pi / krr_granularity + krr_direction_2 * (2 * pi / krr_granularity)))
     # reduced location space
     reduced_location_space = []
     for loc in location_space:
         if perturbed_sector_1[0] <= np.arctan2(loc[1] - loc_1[1], loc[0] - loc_1[0]) <= perturbed_sector_1[1] and \
-           perturbed_sector_2[0] <= np.arctan2(loc_2[1] - loc[1], loc_2[0] - loc[0]) <= perturbed_sector_2[1]:
+           perturbed_sector_2[0] <= np.arctan2(loc[1] - loc_2[1], loc[0] - loc_2[0]) <= perturbed_sector_2[1]:
             reduced_location_space.append(loc)
     # perturb the private location
     if len(reduced_location_space) == 0:
         em_mechanism = DiscreteMechanism(private_loc, epsilon, len(location_space))
-        return em_mechanism.exp_mechanism_loc(location_space)
+        return em_mechanism.exp_mechanism_loc(location_space), location_space
     else:
         em_mechanism = DiscreteMechanism(private_loc, epsilon, len(reduced_location_space))
-        return em_mechanism.exp_mechanism_loc(reduced_location_space)
+        return em_mechanism.exp_mechanism_loc(reduced_location_space), reduced_location_space
 
 
 def merge_traj(traj_1, traj_2, location_space):
@@ -55,12 +55,19 @@ def tp_perturb(traj, location_space, epsilon):
         traj_copy_2[i] = DiscreteMechanism(traj_copy_2[i], epsilon, length).exp_mechanism_loc(location_space)
     # direction perturbation
     for i in range(2, len(traj_copy_1), 2):
-        tp_bi_direction(traj_copy_1[i - 1], traj_copy_2[i], traj_copy_1[i], location_space, epsilon)
-    for i in range(2, len(traj_copy_2), 2):
-        tp_bi_direction(traj_copy_2[i - 1], traj_copy_1[i], traj_copy_2[i], location_space, epsilon)
+        traj_copy_1[i] = tp_bi_direction(traj_copy_1[i-1], traj_copy_1[i+1], traj_copy_1[i], location_space, epsilon)
+    for i in range(1, len(traj_copy_2), 2):
+        traj_copy_2[i] = tp_bi_direction(traj_copy_2[i-1], traj_copy_2[i+1], traj_copy_2[i], location_space, epsilon)
+    # perturb the first and last points
+    traj_copy_1[0] = DiscreteMechanism(traj_copy_1[0], epsilon, length).exp_mechanism_loc(location_space)
+    if len(traj_copy_1) % 2 == 0:
+        traj_copy_1[-1] = DiscreteMechanism(traj_copy_1[-1], epsilon, length).exp_mechanism_loc(location_space)
+    else:
+        traj_copy_2[-1] = DiscreteMechanism(traj_copy_2[-1], epsilon, length).exp_mechanism_loc(location_space)
     # merge traj_copy_1 and traj_copy_2
     return merge_traj(traj_copy_1, traj_copy_2, location_space)
 
 
 if __name__ == "__main__":
     location_space = discrete_location_grid(10, x_max=1, y_max=1)
+

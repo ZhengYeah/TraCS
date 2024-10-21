@@ -14,7 +14,7 @@ plt.ylim(0, 3.5)
 plt.xticks([2, 4, 6, 8, 10])
 
 plt.plot(df["epsilon"], df["tracs_c"], label="TraCS-C", linestyle=":", color="blue", marker="s")
-plt.plot(df["epsilon"], df["strawman"], label="Strawman", linestyle="--", color="black", marker="x")
+# plt.plot(df["epsilon"], df["strawman"], label="Strawman", linestyle="--", color="black", marker="x")
 plt.plot(df["epsilon"], df["tracs_d"], label="TraCS-D", linestyle="-.", color="red", marker="o")
 
 plt.xlabel(r'Privacy parameter $\varepsilon$')
