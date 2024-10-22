@@ -1,27 +1,29 @@
 import numpy as np
+from copy import deepcopy
 from src.ldp_mechanisms import DiscreteMechanism
 
 
-def reachable_locations(loc, location_space, epsilon):
+def reachable_locations(private_loc, location_space, theta):
     """
-    Compute the set of reachable locations from a given location
+    Location space reduction
+    :param private_loc: the location to be perturbed
+    :param location_space: all possible locations (whole location space)
+    :param theta: the threshold of reachable distance
+    :return: reachable locations
     """
     reachable_loc = []
-    for loc_ in location_space:
-        if np.linalg.norm(loc - loc_) <= epsilon:
-            reachable_loc.append(loc_)
+    for loc in location_space:
+        if np.sqrt((private_loc[0] - loc[0]) ** 2 + (private_loc[1] - loc[1]) ** 2) <= theta:
+            reachable_loc.append(loc)
     return reachable_loc
 
 
 def ngram_perturb(traj, location_space, epsilon):
-    length = len(traj)
-    traj_copy = traj.deepcopy()
-    for i in range(1, len(traj_copy)):
-        reachable_loc = reachable_locations(traj_copy[i - 1], location_space, epsilon)
-        if len(reachable_loc) == 0:
-            em_mechanism = DiscreteMechanism(traj_copy[i], epsilon, len(location_space))
-            traj_copy[i] = em_mechanism.exp_mechanism_loc(location_space)
-        else:
-            em_mechanism = DiscreteMechanism(traj_copy[i], epsilon, len(reachable_loc))
-            traj_copy[i] = em_mechanism.exp_mechanism_loc(reachable_loc)
+    traj_copy = deepcopy(traj)
+    for i in range(len(traj_copy)):
+        # location space reduction with threshold theta
+        reachable_loc = reachable_locations(traj_copy[i], location_space, 2)
+        # perturb the private location
+        em_mechanism = DiscreteMechanism(traj_copy[i], epsilon, len(reachable_loc))
+        traj_copy[i] = em_mechanism.exp_mechanism_loc(reachable_loc)
     return traj_copy

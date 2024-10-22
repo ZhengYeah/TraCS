@@ -1,24 +1,18 @@
 import pytest
 import numpy as np
-from src.perturbation_tracs import CoordinatePerturbation
+from src.utilities.discrete_location_space import discrete_location_grid
+from src.other_methods.ngram import ngram_perturb
+
 
 pi = np.pi
 
 
-@pytest.mark.parametrize("location, epsilon", [((1, 2.9), 6),])
-def test_coordinate_perturbation(location, epsilon):
-    set_perturbed_location = set()
-    epsilon_1 = epsilon / 2
-    for _ in range(1000):
-        perturbation = CoordinatePerturbation(location, epsilon, epsilon_1, 2, 3)
-        perturbation.perturb()
-        set_perturbed_location.add(perturbation.perturbed_location)
+@pytest.mark.parametrize("traj, location_space, epsilon", [([(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)], discrete_location_grid(40, x_max=4, y_max=4), 4)])
+def test_ngram_perturb(traj, location_space, epsilon):
+    perturbed_traj = ngram_perturb(traj, location_space, epsilon)
     import matplotlib.pyplot as plt
-    plot = plt.figure()
-    ax = plot.add_subplot(111)
-    x, y = zip(*set_perturbed_location)
-    ax.plot(*location, 'ro')
-    ax.scatter(x, y)
-    ax.set_xlim(0, 2)
-    ax.set_ylim(0, 3)
+    plt.scatter(*zip(*location_space), c='r')
+    plt.plot(*zip(*traj), c='b')
+    plt.plot(*zip(*perturbed_traj), c='y')
     plt.show()
+

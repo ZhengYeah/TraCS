@@ -133,7 +133,7 @@ class DiscreteMechanism:
         """
         the exponential mechanism for location perturbation
         """
-        assert self.private_val in location_list
+        location_list.append(self.private_val)
         index = location_list.index(self.private_val)
         length = len(location_list)
         # score function matrix
@@ -153,7 +153,7 @@ class DiscreteMechanism:
         tmp = random.uniform(0, 1)
         index_perturbed = None
         for i in range(length):
-            if tmp < sum(p[:i + 1]):
+            if tmp <= sum(p[:i + 1]):
                 index_perturbed = i
                 break
         return location_list[index_perturbed]
