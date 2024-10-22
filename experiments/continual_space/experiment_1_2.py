@@ -51,7 +51,7 @@ if __name__ == '__main__':
             distance_tracs_c += tracs_vs_strawman(epsilon, 100)[2]
         print(f"epsilon: {epsilon}, tracs-d: {distance_tracs_d / 1000}, strawman: {distance_strawman / 1000}, tracs-c: {distance_tracs_c / 1000}")
         # save to csv
-        # with open(f"./results/experiment_1_2.csv", "a") as f:
+        # with open(f"./results/experiment_1_1.csv", "a") as f:
         #     # header
         #     if epsilon == 2:
         #         # # clear the file

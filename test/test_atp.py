@@ -6,7 +6,7 @@ from src.other_methods.tp import tp_bi_direction, merge_traj, tp_perturb
 pi = np.pi
 
 
-@pytest.mark.parametrize("loc_1, loc_2, private_loc, location_space, epsilon", [((0, 0), (1, 1), (0.5, 0.5), discrete_location_grid(10), 2)])
+@pytest.mark.parametrize("loc_1, loc_2, private_loc, location_space, epsilon", [((0, 1), (1, 0.5), (0.5, 0.5), discrete_location_grid(10), 0.5)])
 def test_tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon):
     perturbed_loc, reduced_loc_space = tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon)
     assert perturbed_loc in location_space

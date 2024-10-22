@@ -1,5 +1,4 @@
 import numpy as np
-from copy import deepcopy
 from src.ldp_mechanisms import DiscreteMechanism
 
 pi = np.pi
@@ -37,10 +36,26 @@ def tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon):
         candidate_direction_2 = np.arctan2(loc[1] - loc_2[1], loc[0] - loc_2[0])
         if candidate_direction_2 < 0:
             candidate_direction_2 += 2 * pi
-        # TODO: need correction
-        if perturbed_sector_1[0] <= candidate_direction_1 <= perturbed_sector_1[1] and \
-                perturbed_sector_2[0] <= candidate_direction_2 <= perturbed_sector_2[1]:
-            reduced_location_space.append(loc)
+        # check if the candidate direction is in the perturbed sector
+        # note: the perturbed sector may cross the 0 degree
+        if perturbed_sector_1[1] > perturbed_sector_1[0]:
+            if perturbed_sector_2[1] > perturbed_sector_2[0]:
+                if perturbed_sector_1[0] <= candidate_direction_1 <= perturbed_sector_1[1] and \
+                        perturbed_sector_2[0] <= candidate_direction_2 <= perturbed_sector_2[1]:
+                    reduced_location_space.append(loc)
+            else:
+                if perturbed_sector_1[0] <= candidate_direction_1 <= perturbed_sector_1[1] and \
+                        (perturbed_sector_2[0] <= candidate_direction_2 or candidate_direction_2 <= perturbed_sector_2[1]):
+                    reduced_location_space.append(loc)
+        else:
+            if perturbed_sector_2[1] > perturbed_sector_2[0]:
+                if (perturbed_sector_1[0] <= candidate_direction_1 or candidate_direction_1 <= perturbed_sector_1[1]) and \
+                        perturbed_sector_2[0] <= candidate_direction_2 <= perturbed_sector_2[1]:
+                    reduced_location_space.append(loc)
+            else:
+                if (perturbed_sector_1[0] <= candidate_direction_1 or candidate_direction_1 <= perturbed_sector_1[1]) and \
+                        (perturbed_sector_2[0] <= candidate_direction_2 or candidate_direction_2 <= perturbed_sector_2[1]):
+                    reduced_location_space.append(loc)
     # perturb the private location
     if len(reduced_location_space) == 0:
         em_mechanism = DiscreteMechanism(private_loc, epsilon / 3, len(location_space))
@@ -83,8 +98,8 @@ def tp_perturb(traj, location_space, epsilon):
     ========
     """
     length = len(traj)
-    traj_copy_1 = deepcopy(traj)
-    traj_copy_2 = deepcopy(traj)
+    traj_copy_1 = traj.copy()
+    traj_copy_2 = traj.copy()
     # perturb odd points in traj_copy_1
     for i in range(1, len(traj_copy_1), 2):
         traj_copy_1[i] = DiscreteMechanism(traj_copy_1[i], epsilon * 0.5, length).exp_mechanism_loc(location_space)
