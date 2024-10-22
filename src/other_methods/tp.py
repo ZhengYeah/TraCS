@@ -37,6 +37,7 @@ def tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon):
         candidate_direction_2 = np.arctan2(loc[1] - loc_2[1], loc[0] - loc_2[0])
         if candidate_direction_2 < 0:
             candidate_direction_2 += 2 * pi
+        # TODO: need correction
         if perturbed_sector_1[0] <= candidate_direction_1 <= perturbed_sector_1[1] and \
                 perturbed_sector_2[0] <= candidate_direction_2 <= perturbed_sector_2[1]:
             reduced_location_space.append(loc)

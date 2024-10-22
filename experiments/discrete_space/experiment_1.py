@@ -29,7 +29,6 @@ def error_tracs(private_traj, epsilon, epsilon_d, epsilon_1, x_max, y_max, granu
     return error_tracs_d, error_tracs_c
 
 
-
 if __name__ == '__main__':
     x_max, y_max = 1, 1
     granularity = 10
