@@ -18,11 +18,11 @@ def reachable_locations(private_loc, location_space, theta):
     return reachable_loc
 
 
-def ngram_perturb(traj, location_space, epsilon):
+def ngram_perturb(traj, location_space, epsilon, theta):
     traj_copy = deepcopy(traj)
     for i in range(len(traj_copy)):
         # location space reduction with threshold theta
-        reachable_loc = reachable_locations(traj_copy[i], location_space, 2)
+        reachable_loc = reachable_locations(traj_copy[i], location_space, theta)
         # perturb the private location
         em_mechanism = DiscreteMechanism(traj_copy[i], epsilon, len(reachable_loc))
         traj_copy[i] = em_mechanism.exp_mechanism_loc(reachable_loc)

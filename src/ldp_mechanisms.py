@@ -133,22 +133,21 @@ class DiscreteMechanism:
         """
         the exponential mechanism for location perturbation
         """
-        location_list.append(self.private_val)
-        index = location_list.index(self.private_val)
         length = len(location_list)
-        # score function matrix
-        score_matrix = np.zeros([length, length])
+        # corner case: only one location -> sensitivity is inf
+        if length == 1:
+            return location_list[0]
+        # score function array
+        score_array = np.zeros(length)
         for i in range(length):
-            for j in range(length):
-                # l2 distance
-                score_matrix[i][j] = -np.sqrt((location_list[i][0] - location_list[j][0]) ** 2 + (location_list[i][1] - location_list[j][1]) ** 2)
-        # sensitivity
-        sensitivity = max(score_matrix.flatten()) - min(score_matrix.flatten())
+            score_array[i] = -np.linalg.norm(np.array(location_list[i]) - np.array(self.private_val))
+        sensitivity = max(score_array) - min(score_array)
         # probability array
         p = np.zeros(length)
         for i in range(length):
-            p[i] = exp ** (self.epsilon * score_matrix[i][index] / (2 * sensitivity))
+            p[i] = exp ** (self.epsilon * score_array[i] / (2 * sensitivity))
         p = p / sum(p)
+        assert abs(sum(p) - 1) < 1e-3
         # sample
         tmp = random.uniform(0, 1)
         index_perturbed = None

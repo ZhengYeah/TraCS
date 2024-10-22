@@ -18,3 +18,6 @@ def generate_random_traj_discrete(n_points, granularity, x_max=1, y_max=1):
     traj = generate_random_traj(n_points, x_max, y_max)
     traj[:, 0] = np.round(traj[:, 0] * granularity) / granularity
     traj[:, 1] = np.round(traj[:, 1] * granularity) / granularity
+    # round to 5 decimal places
+    traj = np.round(traj, 5)
+    return [(x, y) for x, y in traj]

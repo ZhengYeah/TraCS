@@ -7,7 +7,7 @@ def l2_distance(traj_1, traj_2):
     """
     sum_distance = 0
     for i in range(len(traj_1)):
-        sum_distance += np.linalg.norm(traj_1[i] - traj_2[i])
+        sum_distance += np.sqrt((traj_1[i][0] - traj_2[i][0]) ** 2 + (traj_1[i][1] - traj_2[i][1]) ** 2)
     return sum_distance
 
 
