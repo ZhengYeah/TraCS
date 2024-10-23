@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from src.utilities.discrete_location_space import discrete_location_grid
-from src.other_methods.tp import tp_bi_direction, merge_traj, tp_perturb
+from src.methods.tp import tp_bi_direction, merge_traj, tp_perturb
 
 pi = np.pi
 

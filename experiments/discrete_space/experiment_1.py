@@ -1,8 +1,8 @@
 import numpy as np
 from src.utilities.discrete_location_space import discrete_location_grid
-from src.other_methods.ngram import ngram_perturb
-from src.other_methods.tp import tp_perturb
-from src.other_methods.wrapped_tracs import tracs_d, tracs_c
+from src.methods.ngram import ngram_perturb
+from src.methods.tp import tp_perturb
+from src.methods.wrapped_tracs import tracs_d, tracs_c
 from src.utilities.generate_random_traj import generate_random_traj_discrete
 from src.utilities.trajectory_distance import averaged_l2_distance
 

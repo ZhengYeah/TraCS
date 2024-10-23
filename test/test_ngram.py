@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from src.utilities.discrete_location_space import discrete_location_grid
-from src.other_methods.ngram import ngram_perturb
+from src.methods.ngram import ngram_perturb
 
 
 pi = np.pi

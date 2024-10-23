@@ -1,6 +1,6 @@
 import numpy as np
 from copy import deepcopy
-from src.other_methods.strawman import strawman_perturbation
+from src.methods.strawman import strawman_perturbation
 from src.utilities.generate_random_traj import generate_random_traj
 from src.utilities.trajectory_distance import averaged_l2_distance
 from src.perturbation_tracs import DirectionDistancePerturbation, CoordinatePerturbation

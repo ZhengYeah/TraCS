@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.other_methods.strawman import strawman_perturbation
+from src.methods.strawman import strawman_perturbation
 
 pi = np.pi
 
