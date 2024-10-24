@@ -6,7 +6,7 @@ df = pd.read_csv('nyc.csv', encoding='latin-1')
 location_space = np.array(df[['Latitude', 'Longitude']])
 # remove duplicates
 location_space = np.unique(location_space, axis=0)
-location_space = np.round(location_space, 5)
+location_space = np.round(location_space, 8)
 # normalize the location space
 x_min, x_max = np.min(location_space[:, 0]), np.max(location_space[:, 0])
 y_min, y_max = np.min(location_space[:, 1]), np.max(location_space[:, 1])
@@ -21,7 +21,7 @@ with open(f"./nyc_location_space.pkl", "wb") as f:
 
 # extract trajectory
 id_location = np.array(df[['User ID', 'Latitude', 'Longitude']])
-rounded_location = np.round(id_location[:, 1:], 5)
+rounded_location = np.round(id_location[:, 1:], 8)
 # normalize the locations
 x_min, x_max = np.min(rounded_location[:, 0]), np.max(rounded_location[:, 0])
 y_min, y_max = np.min(rounded_location[:, 1]), np.max(rounded_location[:, 1])
