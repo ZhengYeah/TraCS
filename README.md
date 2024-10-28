@@ -1,3 +1,5 @@
+from experiments.discrete_space.CHI.extract_chi import x_max
+
 # TraCS
 
 ## Reproductions
@@ -17,10 +19,10 @@ where also contains the drawing scripts for the figures in the paper.
 The code is organized as follows:
 - `src/` contains the source code for the TraCS mechanisms and other methods.
     - `src/ldp_mechanisms.py` contains the LDP mechanisms used in this paper.
-    - `src/perturbation_tracs.py` contains the implementation of TraCS-D and TraCS-C.
-    - `src/methods.py` wraps the TraCS mechanisms and other methods.
+    - `src/perturbation_tracs.py` contains the implementation of TraCS-D and TraCS-C for each location.
+    - `src/methods.py` wraps the TraCS methods and other methods for a trajectory.
     - `src/utilities.py` contains some utility functions.
-- `tests/` contains the testing code for the TraCS mechanisms and other methods.
+- `tests/` contains the testing code for main classes and methods.
 - `experiments/` contains the code for the experiments in the paper.
 
 In file `src/ldp_mechanisms.py`, we classify the LDP mechanisms into `PiecewiseMechanism` and `DiscreteMechanism` classes.
@@ -33,7 +35,14 @@ instantiates a `PiecewiseMechanism` object with the circular domain and perturbs
 
 In file `src/perturbation_tracs.py`, the
 TraCS-D and TraCS-C are encapsulated as classes `DirectionDistancePerturbation` and `CoordinatePerturbation`.
-
+To instantiate a TraCS-D object, we use
+```python
+tracs_d = DirectionDistancePerturbation(ref_location, location, epsilon, epsilon_d, x_max, y_max)
+tracs_d_perturbed = tracs_d.perturb()
+```
+where `ref_location` and `location` are the reference location and the location to be perturbed, respectively.
+`epsilon` and `epsilon_d` are the total privacy budgets and the privacy budget for the direction, respectively.
+`x_max` and `y_max` are the size of the domain.
 
 Implementation tested corrected; see directory `tests/` for the testing code.
 
