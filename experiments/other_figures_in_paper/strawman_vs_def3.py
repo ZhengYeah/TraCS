@@ -8,7 +8,7 @@ plt.rcParams['text.usetex'] = True
 plt.rcParams['font.size'] = 20
 plt.rcParams['font.family'] = 'serif'
 
-bins = 12
+bins = 6
 varphi = pi / 6
 
 epsilon = np.linspace(1.8, 10, 20, endpoint=True)
