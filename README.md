@@ -1,6 +1,10 @@
-from experiments.discrete_space.CHI.extract_chi import x_max
-
 # TraCS
+
+Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
+Differential Privacy
+<div style="display: flex; justify-content: center;">
+    <img src="others/poster.png" width="600" >
+</div>
 
 ## Reproductions
 
