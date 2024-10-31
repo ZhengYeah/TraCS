@@ -4,7 +4,7 @@ Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
 Differential Privacy
 
 <div style="display: flex; justify-content: center">
-    <img src="others/poster.png" width="600">
+    <img src="others/poster.png" width="800">
 </div>
 
 ## Reproductions
