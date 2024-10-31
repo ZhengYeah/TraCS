@@ -2,8 +2,9 @@
 
 Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
 Differential Privacy
-<div style="display: flex; justify-content: center; width: 600px">
-    <img src="others/poster.png">
+
+<div style="display: flex; justify-content: center">
+    <img src="others/poster.png" width="600">
 </div>
 
 ## Reproductions
