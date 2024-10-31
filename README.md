@@ -3,14 +3,13 @@
 Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
 Differential Privacy
 
-<div style="display: flex; justify-content: center">
-    <img src="others/poster.png" width="800">
-</div>
+![poster.png](others/poster.png)
 
 ## Reproductions
 
-To reproduce the results in the paper, you can change to the `experiments/continuous_space` directory
-or the `experiments/discrete_space` directory and run the corresponding script, e.g.
+To reproduce the results in the paper, you can change directory to `experiments/continuous_space` or
+`experiments/discrete_space` and run the corresponding script.
+For example, running
 ```bash
 python experiment_1_1.py
 ```
