@@ -9,7 +9,7 @@ Contributions:
 
 ![poster.png](others/poster.png)
 
-**TraCS slides here.**
+**Click here for slides.**
 
 ## Reproductions
 
