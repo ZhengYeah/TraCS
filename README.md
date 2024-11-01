@@ -9,7 +9,7 @@ Contributions:
 
 ![poster.png](others/poster.png)
 
-**Slides:** 
+**TraCS slides here.**
 
 ## Reproductions
 
@@ -59,3 +59,8 @@ Implementation tested corrected; see directory `tests/` for the testing code.
 There may be division by zero warnings or errors in running the code for discrete spaces,
 generally due to the random trajectory generator generating wired trajectories.
 When this happens, you can run the code again.
+
+## License
+
+This project is licensed under the MIT License for freedom of use and distribution.
+Hope this paper and code can help you in your research or work.
