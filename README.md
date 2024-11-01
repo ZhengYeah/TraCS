@@ -7,7 +7,7 @@ Contributions:
 - The first method to collect trajectories in continuous space under pure LDP.
 - New perturbation mechanisms for continuous direction space and distance space.
 
-<div  style="display: flex; justify-content: center">
+<div align="center">
   <img src="others/poster.png" alt="Poster" width="720">
 </div>
 
@@ -15,14 +15,14 @@ Contributions:
 
 ## Reproductions
 
-To reproduce the results in the paper, you can change directory to `experiments/continuous_space` or
+To reproduce the results in the paper, you can change the directory to `experiments/continuous_space` or
 `experiments/discrete_space` and run the corresponding script.
 For example, running
 ```bash
 python experiment_1_1.py
 ```
 will print the results of the first experiment in the paper.
-The `csv`files containing the results will be saved in the `results/` directory, 
+The `csv` files containing the results will be saved in the `results/` directory, 
 where also contains the drawing scripts for the figures in the paper. 
 
 
