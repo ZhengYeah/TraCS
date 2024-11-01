@@ -3,7 +3,13 @@
 Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
 Differential Privacy
 
+Contributions:
+- The first method to collect trajectories in continuous space under pure LDP.
+- New perturbation mechanisms for continuous direction space and distance space.
+
 ![poster.png](others/poster.png)
+
+**Slides:** 
 
 ## Reproductions
 
@@ -46,7 +52,7 @@ tracs_d_perturbed = tracs_d.perturb()
 ```
 where `ref_location` and `location` are the reference location and the location to be perturbed, respectively.
 `epsilon` and `epsilon_d` are the total privacy budgets and the privacy budget for the direction, respectively.
-`x_max` and `y_max` are the size of the domain.
+`x_max` and `y_max` are the size of the domain (Algorithm 1 in the paper).
 
 Implementation tested corrected; see directory `tests/` for the testing code.
 
