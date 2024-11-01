@@ -7,7 +7,9 @@ Contributions:
 - The first method to collect trajectories in continuous space under pure LDP.
 - New perturbation mechanisms for continuous direction space and distance space.
 
-![poster.png](others/poster.png)
+<div  style="display: flex; justify-content: center">
+  <img src="others/poster.png" alt="Poster" width="720">
+</div>
 
 **Click here for slides.**
 
@@ -60,7 +62,7 @@ There may be division by zero warnings or errors in running the code for discret
 generally due to the random trajectory generator generating wired trajectories.
 When this happens, you can run the code again.
 
-## License
+## Freedom of Use
 
 This project is licensed under the MIT License for freedom of use and distribution.
 Hope this paper and code can help you in your research or work.
