@@ -1,5 +1,7 @@
 # TraCS
 
+[![Python Package using Conda](https://github.com/ZhengYeah/TraCS/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/ZhengYeah/TraCS/actions/workflows/python-package-conda.yml)
+
 Code for paper: TraCS: Trajectory Collection in Continuous Space under Local
 Differential Privacy
 
