@@ -1,0 +1,11 @@
+name: tracs-env
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - flake8
+  - pytest
+  - numpy
+  - pandas
+  - matplotlib
+  - scikit-learn
