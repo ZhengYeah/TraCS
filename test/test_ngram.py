@@ -9,7 +9,7 @@ pi = np.pi
 
 @pytest.mark.parametrize("traj, location_space, epsilon", [([(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)], discrete_location_grid(40, x_max=4, y_max=4), 4)])
 def test_ngram_perturb(traj, location_space, epsilon):
-    perturbed_traj = ngram_perturb(traj, location_space, epsilon)
+    perturbed_traj = ngram_perturb(traj, location_space, epsilon, 1)
     import matplotlib.pyplot as plt
     plt.scatter(*zip(*location_space), c='r')
     plt.plot(*zip(*traj), c='b')
