@@ -56,7 +56,7 @@ def process_trajectory(traj):
 if __name__ == '__main__':
     location_space, trajectory = load_nyc()
     # first 100 trajectories
-    trajectory = trajectory[:16]
+    trajectory = trajectory[:100]
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)

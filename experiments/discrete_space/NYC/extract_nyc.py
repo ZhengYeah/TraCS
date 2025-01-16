@@ -15,7 +15,7 @@ location_space = (location_space - [x_min, y_min]) / [x_max - x_min, y_max - y_m
 print(f"Length of location space: {len(location_space)}")
 
 # write to pickle
-with open(f"../nyc_location_space.pkl", "wb") as f:
+with open(f"./nyc_location_space.pkl", "wb") as f:
     pickle.dump(location_space, f)
 
 
@@ -40,5 +40,5 @@ for i in range(len(id_location)):
         cur_id_trajectory = [id_location[i, 1:]]
         cur_id = id_location[i, 0]
 print(f"Length of trajectory: {len(trajectory)}")
-with open(f"../nyc_trajectory.pkl", "wb") as f:
+with open(f"./nyc_trajectory.pkl", "wb") as f:
     pickle.dump(trajectory, f)
