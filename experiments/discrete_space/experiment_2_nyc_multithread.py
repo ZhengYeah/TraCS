@@ -14,14 +14,16 @@ def load_nyc():
         location_space = pickle.load(f)
     with open(f"./NYC/nyc_trajectory.pkl", "rb") as f:
         trajectory = pickle.load(f)
+    # print(f"Length of trajectory: {len(trajectory)}")
+    # print(f"Length of location space: {len(location_space)}")
     return location_space, trajectory
 
 
 def process_trajectory(traj):
-    location_space, epsilon = load_nyc()[0], 2
+    location_space, epsilon = load_nyc()[0], 1
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
-    perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta=0.75)
+    perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta=0.8)
     perturbed_traj_tracs_d = tracs_d(traj, epsilon, pi / (pi + 1) * epsilon)
     perturbed_traj_tracs_c = tracs_c(traj, epsilon, epsilon / 2)
     # round the perturbed locations to the nearest location in the location space (TraCS)
@@ -53,12 +55,12 @@ def process_trajectory(traj):
 
 if __name__ == '__main__':
     location_space, trajectory = load_nyc()
-    # first 100 and last 100 trajectories
-    trajectory = trajectory[:100]
+    # first 100 trajectories
+    trajectory = trajectory[:16]
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
-    print(f"epsilon: 2, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, tracs-d: {np.mean(error_list[:, 2])}, tracs-c: {np.mean(error_list[:, 3])}")
+    print(f"epsilon: 1, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, tracs-d: {np.mean(error_list[:, 2])}, tracs-c: {np.mean(error_list[:, 3])}")
     # write to csv
     with open(f"./results/experiment_2_nyc.csv", "a") as f:
         f.write("tp,ngram,tracs_d,tracs_c\n")
