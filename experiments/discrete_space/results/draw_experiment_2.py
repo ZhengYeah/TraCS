@@ -9,9 +9,10 @@ plt.rcParams["figure.figsize"] = (5, 5)
 
 
 # open the csv file
-df = pd.read_csv("./experiment_2_nyc.csv")
+df = pd.read_csv("./experiment_2_tky.csv")
 # draw the plot
-plt.ylim(0, 0.18)
+plt.ylim(0, 0.15)
+plt.yticks([0, 0.05, 0.1, 0.15])
 plt.xticks([2, 4, 6, 8, 10])
 plt.plot(df["epsilon"], df["tp"], label="ATP", linestyle="--", color="black", marker="x")
 plt.plot(df["epsilon"], df["ngram"], label="NGram", linestyle="--", color="green", marker="^")
@@ -21,7 +22,7 @@ plt.plot(df["epsilon"], df["tracs_c"], label="TraCS-C", linestyle=":", color="bl
 plt.xlabel(r'Privacy parameter $\varepsilon$')
 plt.ylabel(r"Average error")
 plt.legend()
-plt.savefig("./experiment_2_nyc.eps")
+plt.savefig("./experiment_2_tky.eps")
 plt.show()
 
 

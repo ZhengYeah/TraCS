@@ -20,7 +20,7 @@ def load_nyc():
 
 
 def process_trajectory(traj):
-    location_space, epsilon = load_nyc()[0], 4
+    location_space, epsilon = load_nyc()[0], 10
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
     perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta=0.8)
@@ -56,12 +56,12 @@ def process_trajectory(traj):
 if __name__ == '__main__':
     location_space, trajectory = load_nyc()
     # first 100 trajectories
-    trajectory = trajectory[:10]
+    trajectory = trajectory[:50]
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
-    print(f"epsilon: 1, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, tracs-d: {np.mean(error_list[:, 2])}, tracs-c: {np.mean(error_list[:, 3])}")
+    print(f"epsilon: 2, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, tracs-d: {np.mean(error_list[:, 2])}, tracs-c: {np.mean(error_list[:, 3])}")
     # write to csv
     with open(f"./results/experiment_2_tky.csv", "a") as f:
         f.write("tp,ngram,tracs_d,tracs_c\n")
-        f.write(f"{np.mean(error_list[:, 0])}, {np.mean(error_list[:, 1])}, {np.mean(error_list[:, 2])}, {np.mean(error_list[:, 3])}\n")
+        f.write(f"{np.mean(error_list[:, 0])},{np.mean(error_list[:, 1])},{np.mean(error_list[:, 2])},{np.mean(error_list[:, 3])}\n")
