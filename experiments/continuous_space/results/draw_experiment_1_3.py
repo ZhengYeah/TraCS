@@ -20,5 +20,5 @@ plt.plot(df["epsilon"], df["tracs_d"], label="TraCS-D", linestyle="-.", color="r
 plt.xlabel(r'Privacy parameter $\varepsilon$')
 plt.ylabel(r"Average error (AE)")
 plt.legend()
-plt.savefig("./experiment_1_3.eps")
+plt.savefig("./experiment_1_3.pdf")
 plt.show()

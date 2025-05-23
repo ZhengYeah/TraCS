@@ -157,6 +157,30 @@ class DiscreteMechanism:
                 break
         return location_list[index_perturbed]
 
+    def srr_3_groups(self, groups: "list"):
+        """
+        the SRR mechanism with 3 groups
+        """
+        assert len(groups) == 3
+        length = len(groups[0]) + len(groups[1]) + len(groups[2])
+        a_min = 2 / (2 * length * self.epsilon - (self.epsilon - 1) * (len(groups[1]) + 2 * len(groups[2])))
+        delta_x = a_min * (self.epsilon - 1) / 2
+        # probability of each point
+        p_single = [a_min + 2 * delta_x, a_min + delta_x, a_min]
+        # probability of each group
+        p = [p_single[0] * len(groups[0]), p_single[1] * len(groups[1]), p_single[2] * len(groups[2])]
+        # probability normalization constraint
+        assert abs(sum(p) - 1) < 1e-2
+        # sample
+        tmp = random.uniform(0, 1)
+        index_perturbed = None
+        for i in range(3):
+            if tmp <= sum(p[:i + 1]):
+                index_perturbed = i
+                break
+        # sample from the group
+        return random.choice(groups[index_perturbed])
+
 
 # if __name__ == "__main__":
 #     mechanism = PiecewiseMechanism(0, 1)
