@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 from src.methods.ngram import ngram_perturb
 from src.methods.tp import tp_perturb
+from src.methods.srr_3_groups import srr_perturb
 from src.methods.wrapped_tracs import tracs_d, tracs_c
 from src.utilities.trajectory_distance import averaged_l2_distance
 from src.utilities.gps_unit_transformation import unit_square_to_gps
@@ -20,10 +21,13 @@ def load_nyc():
 
 
 def process_trajectory(traj):
-    location_space, epsilon = load_nyc()[0], 10
+    location_space, epsilon = load_nyc()[0], 2
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
-    perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta=0.8)
+    theta = 0.75 * np.sqrt(2)
+    perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta)
+    distance_list = [0.3, 0.6]
+    perturbed_traj_srr = srr_perturb(traj, location_space, epsilon, distance_list)
     perturbed_traj_tracs_d = tracs_d(traj, epsilon, pi / (pi + 1) * epsilon)
     perturbed_traj_tracs_c = tracs_c(traj, epsilon, epsilon / 2)
     # round the perturbed locations to the nearest location in the location space (TraCS)
@@ -39,6 +43,7 @@ def process_trajectory(traj):
     gps_traj = unit_square_to_gps(traj, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_tp = unit_square_to_gps(perturbed_traj_tp, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_ngram = unit_square_to_gps(perturbed_traj_ngram, x_min, x_max, y_min, y_max)
+    gps_perturbed_traj_srr = unit_square_to_gps(perturbed_traj_srr, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_tracs_d = unit_square_to_gps(perturbed_traj_tracs_d, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_tracs_c = unit_square_to_gps(perturbed_traj_tracs_c, x_min, x_max, y_min, y_max)
     # print(f"gps_traj: {gps_traj}")
@@ -48,9 +53,10 @@ def process_trajectory(traj):
     # compute errors
     error_tp = averaged_l2_distance(gps_traj, gps_perturbed_traj_tp)
     error_ngram = averaged_l2_distance(gps_traj, gps_perturbed_traj_ngram)
+    error_srr = averaged_l2_distance(gps_traj, gps_perturbed_traj_srr)
     error_tracs_d = averaged_l2_distance(gps_traj, gps_perturbed_traj_tracs_d)
     error_tracs_c = averaged_l2_distance(gps_traj, gps_perturbed_traj_tracs_c)
-    return [error_tp, error_ngram, error_tracs_d, error_tracs_c]
+    return [error_tp, error_ngram, error_srr, error_tracs_d, error_tracs_c]
 
 
 if __name__ == '__main__':
@@ -60,8 +66,8 @@ if __name__ == '__main__':
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
-    print(f"epsilon: 2, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, tracs-d: {np.mean(error_list[:, 2])}, tracs-c: {np.mean(error_list[:, 3])}")
+    print(f"epsilon: 2, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, srr: {np.mean(error_list[:,2])}, tracs-d: {np.mean(error_list[:, 3])}, tracs-c: {np.mean(error_list[:, 4])}")
     # write to csv
     with open(f"./results/experiment_2_tky.csv", "a") as f:
-        f.write("tp,ngram,tracs_d,tracs_c\n")
-        f.write(f"{np.mean(error_list[:, 0])},{np.mean(error_list[:, 1])},{np.mean(error_list[:, 2])},{np.mean(error_list[:, 3])}\n")
+        f.write("tp,ngram,lsrr,tracs_d,tracs_c\n")
+        f.write(f"{np.mean(error_list[:, 0])},{np.mean(error_list[:, 1])},{np.mean(error_list[:, 2])},{np.mean(error_list[:, 3])},{np.mean(error_list[:, 4])}\n")

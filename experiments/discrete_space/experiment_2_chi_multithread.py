@@ -18,7 +18,7 @@ def load_chi():
 
 
 def process_trajectory(traj):
-    location_space, epsilon = load_chi()[0], 2
+    location_space, epsilon = load_chi()[0], 4
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
     perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta=0.75)
@@ -54,7 +54,7 @@ def process_trajectory(traj):
 if __name__ == '__main__':
     location_space, trajectory = load_chi()
     # first 100 and last 100 trajectories
-    trajectory = trajectory[:100]
+    trajectory = trajectory[100:200]
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
