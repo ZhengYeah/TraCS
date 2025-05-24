@@ -21,7 +21,7 @@ def load_nyc():
 
 
 def process_trajectory(traj):
-    location_space, epsilon = load_nyc()[0], 2
+    location_space, epsilon = load_nyc()[0], 10
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
     theta = 0.75 * np.sqrt(2)
@@ -62,7 +62,7 @@ def process_trajectory(traj):
 if __name__ == '__main__':
     location_space, trajectory = load_nyc()
     # first 100 trajectories
-    trajectory = trajectory[:50]
+    trajectory = trajectory[:10]
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
