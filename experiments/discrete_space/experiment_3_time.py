@@ -3,6 +3,7 @@ import pickle
 import time
 from src.methods.ngram import ngram_perturb
 from src.methods.tp import tp_perturb
+from src.methods.srr_3_groups import srr_perturb
 from src.methods.wrapped_tracs import tracs_d, tracs_c
 
 pi = np.pi
@@ -32,6 +33,11 @@ for _ in range(3*T):
     perturbed_traj_ngram = ngram_perturb(trajectory, location_space, epsilon, theta=0.75)
 ngram_timer_end = time.perf_counter()
 
+ssr_timer_start = time.perf_counter()
+for _ in range(3*T):
+    perturbed_traj_srr = srr_perturb(trajectory, location_space, epsilon, [0.3, 0.6])
+ssr_timer_end = time.perf_counter()
+
 tracs_d_timer_start = time.perf_counter()
 for _ in range(T):
     perturbed_traj_tracs_d = tracs_d(trajectory, epsilon, pi / (pi + 1) * epsilon)
@@ -50,5 +56,6 @@ tracs_c_timer_end = time.perf_counter()
 
 print(f"TP Time: {(tp_timer_end - tp_timer_start)/length/T}")
 print(f"NGram Time: {(ngram_timer_end - ngram_timer_start)/length/T/3}")
+print(f"SRR Time: {(ssr_timer_end - ssr_timer_start)/length/T/3}")
 print(f"TRACS-D Time: {(tracs_d_timer_end - tracs_d_timer_start)/length/T}")
 print(f"TRACS-C Time: {(tracs_c_timer_end - tracs_c_timer_start)/length/T}")
