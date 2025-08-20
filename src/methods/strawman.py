@@ -6,6 +6,10 @@ pi = np.pi
 
 
 def strawman_perturbation(ref_location: tuple, location: tuple, epsilon, x_max=1, y_max=1):
+    """
+    direction perturbation: krr + uniform sampling perturbation
+    distance perturbation: piecewise-based mechanism
+    """
     epsilon_d = pi / (pi + 1) * epsilon
     direction_distance = DirectionDistancePerturbation(ref_location, location, epsilon, epsilon_d, x_max, y_max)
     direction_distance._direction_perturbation()

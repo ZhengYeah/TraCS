@@ -1,5 +1,3 @@
-import time
-
 import numpy as np
 import random
 
@@ -174,7 +172,6 @@ class DiscreteMechanism:
         # probability normalization constraint
         assert abs(sum(p) - 1) < 1e-2
         # sample
-        srr_time_start = time.perf_counter()
         tmp = random.uniform(0, 1)
         index_perturbed = None
         for i in range(3):
@@ -183,8 +180,6 @@ class DiscreteMechanism:
                 break
         # sample from the group
         res = random.choice(groups[index_perturbed])
-        srr_time_end = time.perf_counter()
-        print(f"SRR time: {srr_time_end - srr_time_start}")
         return res
 
 
