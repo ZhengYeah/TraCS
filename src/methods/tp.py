@@ -96,6 +96,9 @@ def tp_perturb(traj, location_space, epsilon):
     two direction perturbations belongs to the pivot location and takes 0.5 * 0.75 / 2 epsilon,
     and the remained 0.5 *  0.25 epsilon is used for the perturbation in the reduced location space.
     ========
+    Extension to trajectory-level epsilon:
+    we can use the same epsilon for each location, which is equivalent to using trajectory-level epsilon = len(traj) * epsilon.
+    In this case, the privacy parameter allocation is the same as ATP in the paper.
     """
     length = len(traj)
     traj_copy_1 = traj.copy()

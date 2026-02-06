@@ -23,17 +23,18 @@ def load_chi():
 
 def process_trajectory(traj):
     """
-    Fix epsilon here; batch process trajectories
+    !!! Fix epsilon here; batch process trajectories
     """
-    location_space, epsilon = load_chi()[0], 10
+    location_space, epsilon = load_chi()[0], 6
     # perturbed trajectories
-    perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
-    theta = 0.75 * np.sqrt(2)
-    perturbed_traj_ngram = ngram_perturb(traj, location_space, epsilon, theta)
-    distance_list = [0.3, 0.6]
-    perturbed_traj_srr = srr_perturb(traj, location_space, epsilon, distance_list)
-    perturbed_traj_tracs_d = tracs_d(traj, epsilon, pi / (pi + 1) * epsilon)
-    perturbed_traj_tracs_c = tracs_c(traj, epsilon, epsilon / 2)
+    avg_epsilon = epsilon / len(traj)
+    perturbed_traj_tp = tp_perturb(traj, location_space, avg_epsilon)
+    theta = 0.8 * np.sqrt(2)
+    perturbed_traj_ngram = ngram_perturb(traj, location_space, avg_epsilon, theta)
+    distance_list = [0.3, 0.6] # Distance thresholds for SRR for 3 groups
+    perturbed_traj_srr = srr_perturb(traj, location_space, avg_epsilon, distance_list)
+    perturbed_traj_tracs_d = tracs_d(traj, avg_epsilon, pi / (pi + 1) * avg_epsilon)
+    perturbed_traj_tracs_c = tracs_c(traj, avg_epsilon, avg_epsilon / 2)
     # round the perturbed locations to the nearest location in the location space (TraCS)
     for i in range(len(perturbed_traj_tracs_d)):
         nearest_location_d = location_space[np.argmin(np.linalg.norm(location_space - perturbed_traj_tracs_d[i], axis=1))]
@@ -72,6 +73,6 @@ if __name__ == '__main__':
     error_list = np.array(error_list)
     print(f"epsilon: 1, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, srr: {np.mean(error_list[:, 2])}, tracs-d: {np.mean(error_list[:, 3])}, tracs-c: {np.mean(error_list[:, 4])}")
     # write to csv
-    with open(f"./results/experiment_2_chi.csv", "a") as f:
+    with open(f"./results/experiment_2_chi_trajectory_epsilon.csv", "a") as f:
         f.write("tp,ngram,srr,tracs_d,tracs_c\n")
         f.write(f"{np.mean(error_list[:, 0])}, {np.mean(error_list[:, 1])}, {np.mean(error_list[:, 2])}, {np.mean(error_list[:, 3])}, {np.mean(error_list[:, 4])}\n")
