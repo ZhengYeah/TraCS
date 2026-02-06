@@ -8,15 +8,17 @@ plt.rcParams["figure.figsize"] = (5, 5)
 
 
 # open the csv file
-df = pd.read_csv("./experiment_1_2.csv")
+df = pd.read_csv("./experiment_1_2_add_laplace.csv")
 # draw the plot
-plt.ylim(0, 5)
+plt.ylim(0, 3.5)
+plt.yticks([0.5, 1, 1.5, 2, 2.5, 3])
 plt.xticks([2, 4, 6, 8, 10])
+plt.plot(df["epsilon"], df["2d_laplace"], label="T-Laplace", linestyle="--", color="gray", marker="^")
 plt.plot(df["epsilon"], df["strawman"], label="Strawman", linestyle="--", color="black", marker="x")
 plt.plot(df["epsilon"], df["tracs_d"], label="TraCS-D", linestyle="-.", color="red", marker="o")
 plt.plot(df["epsilon"], df["tracs_c"], label="TraCS-C", linestyle=":", color="blue", marker="s")
 plt.xlabel(r'Privacy parameter $\varepsilon$')
 plt.ylabel(r"Average error")
 plt.legend()
-plt.savefig("./experiment_1_2.eps")
+plt.savefig("./experiment_1_2_add_laplace.pdf", bbox_inches='tight')
 plt.show()

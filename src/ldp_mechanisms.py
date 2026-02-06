@@ -182,7 +182,6 @@ class DiscreteMechanism:
         res = random.choice(groups[index_perturbed])
         return res
 
-
 # if __name__ == "__main__":
 #     mechanism = PiecewiseMechanism(0, 1)
 #     print(mechanism.linear_perturbation())
