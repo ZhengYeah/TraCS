@@ -10,7 +10,7 @@ from multiprocessing import Pool
 
 pi = np.pi
 
-def load_nyc():
+def load_tky():
     """"
     Already normalized to unit square [0, 1] x [0, 1]
     """
@@ -27,7 +27,7 @@ def process_trajectory(traj):
     """
     !!! Fix epsilon here; batch process trajectories
     """
-    location_space, epsilon = load_nyc()[0], 512
+    location_space, epsilon = load_tky()[0], 32
     # perturbed trajectories
     avg_epsilon = epsilon / len(traj)
     perturbed_traj_tp = tp_perturb(traj, location_space, avg_epsilon)
@@ -67,7 +67,7 @@ def process_trajectory(traj):
 
 
 if __name__ == '__main__':
-    location_space, trajectory = load_nyc()
+    location_space, trajectory = load_tky()
     # first 100 trajectories
     trajectory = trajectory[0:10]
     # print length of each trajectory

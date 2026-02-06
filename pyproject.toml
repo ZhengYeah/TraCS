@@ -8,4 +8,5 @@ dependencies = [
     "matplotlib>=3.10.8",
     "pandas>=3.0.0",
     "pandas-stubs~=3.0.0",
+    "pytest>=9.0.2",
 ]

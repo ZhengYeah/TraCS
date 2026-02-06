@@ -68,7 +68,7 @@ def tp_bi_direction(loc_1, loc_2, private_loc, location_space, epsilon):
 def merge_traj(traj_1, traj_2, location_space):
     length = len(traj_1)
     # # exclude traj_1 and traj_2
-    # # logic error: always outputs traj_1 or traj_2.
+    # # logic error in the paper: always outputs traj_1 or traj_2.
     # # Because traj_1 and traj_2 can be the same when epsilon is large, it should be able to output the locations in traj_1 and traj_2.
     # location_space = [loc for loc in location_space if loc not in traj_1 and loc not in traj_2]
     merged_traj = []
@@ -103,7 +103,7 @@ def tp_perturb(traj, location_space, epsilon):
     length = len(traj)
     traj_copy_1 = traj.copy()
     traj_copy_2 = traj.copy()
-    # perturb odd points in traj_copy_1
+    # perturb odd points in traj_copy_1: 1, 3, 5, ...
     for i in range(1, len(traj_copy_1), 2):
         traj_copy_1[i] = DiscreteMechanism(traj_copy_1[i], epsilon * 0.5, length).exp_mechanism_loc(location_space)
     # perturb even points in traj_copy_2
@@ -111,6 +111,7 @@ def tp_perturb(traj, location_space, epsilon):
         traj_copy_2[i] = DiscreteMechanism(traj_copy_2[i], epsilon * 0.5, length).exp_mechanism_loc(location_space)
     # direction perturbation
     for i in range(2, len(traj_copy_1) - 1, 2):
+        # perturb even points in traj_copy_1: 2, 4, 6, ...
         traj_copy_1[i], _ = tp_bi_direction(traj_copy_1[i-1], traj_copy_1[i+1], traj_copy_1[i], location_space, epsilon * 0.5 * 0.75)
     for i in range(1, len(traj_copy_2) - 1, 2):
         traj_copy_2[i], _ = tp_bi_direction(traj_copy_2[i-1], traj_copy_2[i+1], traj_copy_2[i], location_space, epsilon * 0.5 * 0.75)

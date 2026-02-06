@@ -34,9 +34,12 @@ def range_query_distance(traj_1, traj_2, range_delta):
 def hotpot_count(traj, hotpot_set):
     """
     Compute the preservation distance of a trajectory with respect to a set of hotpots.
+    Considered numerical error between floating point numbers.
     """
     count = 0
+    rounded_hotspot_set = {tuple(np.round(hotspot, decimals=5)) for hotspot in hotpot_set}
     for point in traj:
-        if tuple(point) in hotpot_set:
+        point_tuple = tuple(np.round(point, decimals=5))  # Round to avoid floating point issues
+        if point_tuple in rounded_hotspot_set:
             count += 1
     return count

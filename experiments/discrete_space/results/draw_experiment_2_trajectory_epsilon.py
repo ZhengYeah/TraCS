@@ -30,10 +30,13 @@ plt.rcParams["figure.figsize"] = (5, 5)
 
 
 # open the csv file
-df = pd.read_csv("./experiment_2_chi_.csv")
+df = pd.read_csv("./experiment_2_chi_trajectory_epsilon.csv")
 # draw the plot
-plt.ylim(0, 0.24)
-plt.xticks([2, 4, 6, 8, 10])
+plt.ylim(0, 0.32)
+# use power of 2 for epsilon
+plt.xscale("log", base=2)
+powers = [2, 3, 4, 5, 6]
+plt.xticks([2 ** p for p in powers], [f"$2^{{{p}}}$" for p in powers])
 line_1, = plt.plot(df["epsilon"], df["srr"], label="L-SRR", linestyle="--", color="orange", marker="*")
 line_2, = plt.plot(df["epsilon"], df["tp"], label="ATP", linestyle="--", color="black", marker="x")
 line_3, = plt.plot(df["epsilon"], df["ngram"], label="NGram", linestyle="--", color="green", marker="^")
@@ -46,6 +49,6 @@ legend_1 = plt.legend(handles=[line_1,line_2,line_3], loc="upper right")
 plt.gca().add_artist(legend_1)
 plt.legend(handles=[line_4,line_5], loc="lower left")
 
-plt.savefig("./experiment_2_chi.pdf", bbox_inches='tight')
+plt.savefig("./experiment_2_chi_trajectory_epsilon.pdf", bbox_inches='tight')
 plt.show()
 
