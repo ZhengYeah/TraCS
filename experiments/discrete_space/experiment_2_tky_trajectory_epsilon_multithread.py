@@ -70,9 +70,6 @@ if __name__ == '__main__':
     location_space, trajectory = load_tky()
     # first 100 trajectories
     trajectory = trajectory[0:10]
-    # print length of each trajectory
-    for i, traj in enumerate(trajectory):
-        print(f"Length of trajectory {i}: {len(traj)}")
     with Pool() as pool:
         error_list = pool.map(process_trajectory, trajectory)
     error_list = np.array(error_list)
