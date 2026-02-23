@@ -7,6 +7,7 @@ from src.methods.wrapped_tracs import tracs_d, tracs_c
 from src.utilities.trajectory_distance import hotpot_count
 from src.utilities.gps_unit_transformation import unit_square_to_gps
 from multiprocessing import Pool
+from itertools import repeat
 
 pi = np.pi
 
@@ -17,9 +18,25 @@ def load_chi():
         trajectory = pickle.load(f)
     return location_space, trajectory
 
+def find_hotspot(traj_set, top_percent=0.2):
+    """
+    Find the hotspot in the trajectory set, defined as the location that appears most frequently across all trajectories.
+    """
+    location_count = {}
+    for traj in traj_set:
+        for loc in traj:
+            loc_tuple = tuple(loc)
+            if loc_tuple not in location_count:
+                location_count[loc_tuple] = 0
+            location_count[loc_tuple] += 1
+    # sort locations by count and select the top percent as hotspot
+    sorted_locations = sorted(location_count.items(), key=lambda x: x[1], reverse=True)
+    top_k = int(len(sorted_locations) * top_percent)
+    hotspot = [loc for loc, count in sorted_locations[:top_k]]
+    return hotspot
 
-def process_trajectory(traj):
-    location_space, epsilon = load_chi()[0], 10
+def process_trajectory(traj, hotspot_set):
+    location_space, epsilon = load_chi()[0], 4
     # perturbed trajectories
     perturbed_traj_tp = tp_perturb(traj, location_space, epsilon)
     theta = 0.75 * np.sqrt(2)
@@ -38,6 +55,7 @@ def process_trajectory(traj):
     # transform back to gps coordinates
     # CHI: x_min: 41.60015, x_max: 41.99822, y_min: -87.9952, y_max: -87.50765
     x_min, x_max, y_min, y_max = 41.60015, 41.99822, -87.9952, -87.50765
+    hotspot_set = unit_square_to_gps(hotspot_set, x_min, x_max, y_min, y_max)
     gps_traj = unit_square_to_gps(traj, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_tp = unit_square_to_gps(perturbed_traj_tp, x_min, x_max, y_min, y_max)
     gps_perturbed_traj_ngram = unit_square_to_gps(perturbed_traj_ngram, x_min, x_max, y_min, y_max)
@@ -48,18 +66,13 @@ def process_trajectory(traj):
     # print(f"gps_perturbed_traj_tp: {gps_perturbed_traj_tp}")
     # print(f"gps_perturbed_traj_ngram: {gps_perturbed_traj_ngram}")
     # print(f"gps_perturbed_traj_tracs_d: {gps_perturbed_traj_tracs_d}")
-    #### compute errors in hotpot set ####
-    # define hotpot set as the first 500 locations (50%) in the location space
-    hotpot = unit_square_to_gps(location_space[:500], x_min, x_max, y_min, y_max)
-    hotpot_set = tuple(map(tuple, hotpot))  # make it hashable
     # compute errors
-    gps_traj = unit_square_to_gps(traj, x_min, x_max, y_min, y_max)
-    ground_truth = hotpot_count(gps_traj, hotpot_set)
-    error_tp = np.abs(hotpot_count(gps_perturbed_traj_tp, hotpot_set) - ground_truth)
-    error_ngram = np.abs(hotpot_count(gps_perturbed_traj_ngram, hotpot_set) - ground_truth)
-    error_srr = np.abs(hotpot_count(gps_perturbed_traj_srr, hotpot_set) - ground_truth)
-    error_tracs_d = np.abs(hotpot_count(gps_perturbed_traj_tracs_d, hotpot_set) - ground_truth)
-    error_tracs_c = np.abs(hotpot_count(gps_perturbed_traj_tracs_c, hotpot_set) - ground_truth)
+    ground_truth = hotpot_count(gps_traj, hotspot_set)
+    error_tp = np.abs(hotpot_count(gps_perturbed_traj_tp, hotspot_set) - ground_truth)
+    error_ngram = np.abs(hotpot_count(gps_perturbed_traj_ngram, hotspot_set) - ground_truth)
+    error_srr = np.abs(hotpot_count(gps_perturbed_traj_srr, hotspot_set) - ground_truth)
+    error_tracs_d = np.abs(hotpot_count(gps_perturbed_traj_tracs_d, hotspot_set) - ground_truth)
+    error_tracs_c = np.abs(hotpot_count(gps_perturbed_traj_tracs_c, hotspot_set) - ground_truth)
     return [error_tp, error_ngram, error_srr, error_tracs_d, error_tracs_c]
 
 
@@ -67,8 +80,9 @@ if __name__ == '__main__':
     location_space, trajectory = load_chi()
     # first 100 and last 100 trajectories
     trajectory = trajectory[100:200]
+    hotspot_set = find_hotspot(trajectory)
     with Pool() as pool:
-        error_list = pool.map(process_trajectory, trajectory)
+        error_list = pool.starmap(process_trajectory, zip(trajectory, repeat(hotspot_set)))
     error_list = np.array(error_list)
     print(f"epsilon: 1, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, srr: {np.mean(error_list[:, 2])}, tracs-d: {np.mean(error_list[:, 3])}, tracs-c: {np.mean(error_list[:, 4])}")
     # write to csv
