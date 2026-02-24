@@ -27,7 +27,8 @@ def process_trajectory(traj):
     """
     !!! Fix epsilon here; batch process trajectories
     """
-    location_space, epsilon = load_tky()[0], 32
+    # epsilon = epsilon * 113
+    location_space, epsilon = load_tky()[0], 10 * 113
     # perturbed trajectories
     avg_epsilon = epsilon / len(traj)
     perturbed_traj_tp = tp_perturb(traj, location_space, avg_epsilon)

@@ -16,6 +16,9 @@ class PiecewiseMechanism:
         :return: the perturbed direction
         """
         assert 0 <= self.private_val <= 2 * pi + 1e-6
+        # If epsilon is too large, output the private value to avoid numerical error
+        if self.epsilon > 10:
+            return self.private_val
         # insight: sample from \mechanism(\pi, \epsilon) and then add self.private_val to the sample
         l = pi * (1 - (exp ** (self.epsilon / 2) - 1) / (exp ** self.epsilon - 1))
         r = pi * (1 + (exp ** (self.epsilon / 2) - 1) / (exp ** self.epsilon - 1))

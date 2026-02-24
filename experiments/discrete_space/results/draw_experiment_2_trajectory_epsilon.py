@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.ticker import MultipleLocator
 
 
 plt.rcParams["text.usetex"] = True
@@ -8,14 +9,14 @@ plt.rcParams["font.size"] = 20
 plt.rcParams["figure.figsize"] = (5, 5)
 
 
+
 # open the csv file
 df = pd.read_csv("./experiment_2_tky_trajectory_epsilon.csv")
 # draw the plot
-plt.ylim(0, 0.2)
-# use power of 2 for epsilon
-plt.xscale("log", base=2)
-powers = [5, 6, 7, 8, 9]
-plt.xticks([2 ** p for p in powers], [f"$2^{{{p}}}$" for p in powers])
+plt.ylim(0, 0.12)
+# Use epsilon = 113 * [2, 4, 6, 8, 10] for epsilon
+powers = [2, 4, 6, 8, 10]
+plt.xticks([113 * p for p in powers], [2, 4, 6, 8, 10])
 line_1, = plt.plot(df["epsilon"], df["lsrr"], label="L-SRR", linestyle="--", color="orange", marker="*")
 line_2, = plt.plot(df["epsilon"], df["tp"], label="ATP", linestyle="--", color="black", marker="x")
 line_3, = plt.plot(df["epsilon"], df["ngram"], label="NGram", linestyle="--", color="green", marker="^")
@@ -32,13 +33,13 @@ plt.show()
 
 
 # open the csv file
-df = pd.read_csv("./experiment_2_chi_trajectory_epsilon.csv")
+df = pd.read_csv("./experiment_2_chi_trajectory_epsilon_new.csv")
 # draw the plot
-plt.ylim(0, 0.32)
-# use power of 2 for epsilon
-plt.xscale("log", base=2)
-powers = [2, 3, 4, 5, 6]
-plt.xticks([2 ** p for p in powers], [f"$2^{{{p}}}$" for p in powers])
+plt.ylim(0, 0.14)
+plt.yticks([0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12])
+# Use epsilon = 13 * [2, 4, 6, 8, 10] for epsilon
+powers = [2, 4, 6, 8, 10]
+plt.xticks([13 * p for p in powers], [2, 4, 6, 8, 10])
 line_1, = plt.plot(df["epsilon"], df["srr"], label="L-SRR", linestyle="--", color="orange", marker="*")
 line_2, = plt.plot(df["epsilon"], df["tp"], label="ATP", linestyle="--", color="black", marker="x")
 line_3, = plt.plot(df["epsilon"], df["ngram"], label="NGram", linestyle="--", color="green", marker="^")
