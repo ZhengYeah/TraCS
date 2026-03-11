@@ -33,7 +33,7 @@ plt.show()
 
 
 # open the csv file
-df = pd.read_csv("./experiment_2_chi_trajectory_epsilon_new.csv")
+df = pd.read_csv("experiment_2_chi_trajectory_epsilon.csv")
 # draw the plot
 plt.ylim(0, 0.14)
 plt.yticks([0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12])

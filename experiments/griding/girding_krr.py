@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 from src.ldp_mechanisms import DiscreteMechanism
 from src.utilities.discrete_location_space import GridLocationSpace
@@ -19,7 +18,7 @@ def euclidean_distance(loc1, loc2):
 
 
 if __name__ == '__main__':
-    true_location = (0, 0)
+    true_location = (0.1, 0.1)
 
     # Write to csv
     with open(f"./griding_em.csv", "a") as f:
@@ -29,21 +28,12 @@ if __name__ == '__main__':
             results_10 = []
             result_100 = []
             results_tracs_c = []
-            em_10_times = []
-            em_100_times = []
-            tracs_c_times = []
             for _ in range(200):
-                em_10_start_time = time.time()
                 perturbed_loc_10 = griding_em(true_location, epsilon, 10)
-                em_10_times.append(time.time() - em_10_start_time)
-                em_100_start_time = time.time()
                 perturbed_loc_100 = griding_em(true_location, epsilon, 100)
-                em_100_times.append(time.time() - em_100_start_time)
-                tracs_c_start_time = time.time()
                 tracs_c = CoordinatePerturbation(true_location, epsilon, epsilon / 2, x_max=1, y_max=1)
                 tracs_c.perturb()
                 perturbed_loc_tracs_c = tracs_c.perturbed_location
-                tracs_c_times.append(time.time() - tracs_c_start_time)
                 error_10 = euclidean_distance(true_location, perturbed_loc_10)
                 error_100 = euclidean_distance(true_location, perturbed_loc_100)
                 error_tracs_c = euclidean_distance(true_location, perturbed_loc_tracs_c)
@@ -53,13 +43,7 @@ if __name__ == '__main__':
             avg_error_10 = sum(results_10) / len(results_10)
             avg_error_100 = sum(result_100) / len(result_100)
             avg_error_tracs_c = sum(results_tracs_c) / len(results_tracs_c)
-            avg_em_10_time = sum(em_10_times) / len(em_10_times)
-            avg_em_100_time = sum(em_100_times) / len(em_100_times)
-            avg_tracs_c_time = sum(tracs_c_times) / len(tracs_c_times)
-            print(f"epsilon: {epsilon}, granularity: 10, average time: {avg_em_10_time}")
-            print(f"epsilon: {epsilon}, granularity: 100, average time: {avg_em_100_time}")
-            print(f"epsilon: {epsilon}, tracs-c average time: {avg_tracs_c_time}")
-            # f.write(f"{epsilon},{avg_error_10},{avg_error_100},{avg_error_tracs_c}\n")
-            # print(f"epsilon: {epsilon}, granularity: 10, average error: {avg_error_10}")
-            # print(f"epsilon: {epsilon}, granularity: 100, average error: {avg_error_100}")
-            # print(f"epsilon: {epsilon}, tracs-c average error: {avg_error_tracs_c}")
+            f.write(f"{epsilon},{avg_error_10},{avg_error_100},{avg_error_tracs_c}\n")
+            print(f"epsilon: {epsilon}, granularity: 10, average error: {avg_error_10}")
+            print(f"epsilon: {epsilon}, granularity: 100, average error: {avg_error_100}")
+            print(f"epsilon: {epsilon}, tracs-c average error: {avg_error_tracs_c}")

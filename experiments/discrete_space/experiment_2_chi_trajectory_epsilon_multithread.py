@@ -74,6 +74,6 @@ if __name__ == '__main__':
     error_list = np.array(error_list)
     print(f"epsilon: 1, tp: {np.mean(error_list[:, 0])}, ngram: {np.mean(error_list[:, 1])}, srr: {np.mean(error_list[:, 2])}, tracs-d: {np.mean(error_list[:, 3])}, tracs-c: {np.mean(error_list[:, 4])}")
     # write to csv
-    with open(f"./results/experiment_2_chi_trajectory_epsilon_new.csv", "a") as f:
+    with open(f"./results/experiment_2_chi_trajectory_epsilon.csv", "a") as f:
         f.write("tp,ngram,srr,tracs_d,tracs_c\n")
         f.write(f"{np.mean(error_list[:, 0])}, {np.mean(error_list[:, 1])}, {np.mean(error_list[:, 2])}, {np.mean(error_list[:, 3])}, {np.mean(error_list[:, 4])}\n")
