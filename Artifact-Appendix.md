@@ -4,7 +4,7 @@ Paper title: **TraCS: Trajectory Collection in Continuous Space under Local Diff
 
 Requested Badge(s):
   - [x] **Available**
-  - [ ] **Functional**
+  - [x] **Functional**
   - [ ] **Reproduced**
 
 ## Description
@@ -24,21 +24,101 @@ In this case, the privacy and utility guarantees of TraCS are independent of the
 and each perturbation requires only $\Theta(1)$ time complexity. 
 
 This project demonstrates the advantages of TraCS by comparing its trajectory utility and time cost with those of existing methods.
+
 ### Security/Privacy Issues and Ethical Concerns
 
 The artifact does not require any security modifications for installation or execution.
 Most evaluations are theoretical or comparative in nature. The dataset included is small and publicly available, with no sensitive information involved.
 
+## Basic Requirements
+
+## Hardware Requirements
+
+The code has been tested on both Windows desktops and wsl environment (with specifications below). Standard hardware with a typical CPU and 16GB of memory should be sufficient.
+- CPU: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz
+- Memory: 64GB RAM with speed 2666 MT/s
+
+### Software Requirements
+
+The software requirements for running the artifact are as follows:
+
+1. Operating System: The artifact has been tested on Windows 11 and Ubuntu 22.04 (WSL). It should also work on other operating systems that support Python and Node.js.
+2. Artifact packaging: The artifact is a Python 3.12 project packaged with `uv`.
+3. Dependencies: All the dependent packages are specified in `./pyproject.toml`. They can be installed using the commands provided later.
+4. Dataset: The artifact includes `TKY` and `CHI` datasets, which are included in the repository and do not require additional software to access.
+
+### Estimated Time and Storage Consumption
+
+The estimated time and storage consumption for running the artifact are as follows:
+
+- The overall human and compute times required to run the artifact: Approximately 30 mins for setup and running all experiments.
+- The overall disk space consumed by the artifact: Approximately 1GB, including the codebase, dependencies, and datasets.
+
 ## Environment
+
+### Accessibility
 
 GitHub repository: https://github.com/ZhengYeah/TraCS
 
-We did not organize the files for quick reproduction. 
-However, the scripts used to generate the figures in the paper are included in the `experiments/` directory, 
-and the corresponding results are stored in `experiments/results/`.
-If you would like to reproduce the results in the paper, you may encounter two potential issues:
-- Path configuration: Using PyCharm can simplify path configuration. If you run the scripts from the terminal, you may need to modify the import statements and relative paths in the scripts.
-- Multithreading: Some scripts use multithreading to speed up execution. This reduces code flexibility and may require manually combining results from multiple runs.
+### Set up the environment
+
+**Install UV package manager.** This project is packaged by `uv`, a modern Python package management system similar to `miniconda` or `poetry`. You can install `uv` by following the instructions on their official website: https://docs.astral.sh/uv/. (Remember to add `uv` to your PATH.)
+
+**Clone the repository.** You can clone the repository using the following command:
+
+```bash
+git clone https://github.com/ZhengYeah/TraCS.git
+cd TraCS
+```
+
+**Install Python dependencies.** You should be in the project root directory, which contains the `pyproject.toml` file. Then, run the following uv command:
+
+```bash
+[PROJECT_ROOT]$ uv sync
+```
+This command creates a virtual environment in the project root with Python version specified in the `.python-version` file (Python 3.12 in this case), and installs the dependencies listed in `pyproject.toml`.
+
+### Testing the Environment 
+
+To verify that the python environment is set up correctly, you can run pip check:
+
+```bash
+[PROJECT_ROOT]$ uv pip check
+```
+This will print: all installed packages are compatible.
+
+## Artifact Evaluation
+
+### Main Results and Claims
+
+This artifact mainly supports the following two main results in the paper.
+
+#### Main Result 1: TraCS's Effectiveness in Continuous Spaces
+
+In continuous spaces, TraCS significantly outperforms baseline methods (including Laplace mechanism + truncation and the strawman approach in the paper) in terms of trajectory utility.
+This part corresponds to Section 4.1 and Figure 4, 5, 6, 7.
+
+#### Main Result 2: TraCS's Effectiveness and Efficiency in Discrete Spaces
+
+In discrete spaces, TraCS achieves comparable or better trajectory utility than existing methods while significantly reducing the time cost.
+This part corresponds to Section 4.2 and Figure 8, 9, 10, and Table 3.
+
+### Experiments
+
+Functionality of the paper's main results can be done by running the following scripts:
+
+```
+AudAgent/ (project root)
+├── experiments/
+│   ├── continuous_space/
+│   │   ├── 1_privacy_policy_parsing/claude_stage_1.py  # for the evaluation of privacy policy formalization module (≈2 minutes)
+│   │   ├── 2_annotation/annotator_testing.py  # for the evaluation of data practice annotation module (≈1 minute)
+│   │   ├── 3_time_cost/time_cost_with_aud.py and time_cost_without_aud.py  # for the evaluation of real-time auditing module (≈2 minutes)
+```
+
+You don't need to manually activate a virtual environment, but ensure you're not already inside one.
+
+
 
 ## Notes on Reusability
 

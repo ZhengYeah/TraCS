@@ -137,27 +137,39 @@ class DiscreteMechanism:
         the exponential mechanism for location perturbation
         """
         length = len(location_list)
-        # corner case: only one location -> sensitivity is inf
+        if length == 0:
+            raise ValueError("location_list must not be empty")
+        # corner case: only one location -> deterministic output
         if length == 1:
             return location_list[0]
+
         # score function array
         score_array = np.zeros(length)
+        private_val_array = np.array(self.private_val)
         for i in range(length):
-            score_array[i] = -np.linalg.norm(np.array(location_list[i]) - np.array(self.private_val))
-        sensitivity = max(score_array) - min(score_array)
-        # probability array
-        p = np.zeros(length)
-        for i in range(length):
-            p[i] = exp ** (self.epsilon * score_array[i] / (2 * sensitivity))
-        p = p / sum(p)
-        assert abs(sum(p) - 1) < 1e-3
+            score_array[i] = -np.linalg.norm(np.array(location_list[i]) - private_val_array)
+        sensitivity = float(np.ptp(score_array))
+
+        # Degenerate geometry: all candidates have (almost) identical score.
+        if (not np.isfinite(sensitivity)) or sensitivity <= 1e-12:
+            p = np.full(length, 1.0 / length)
+        else:
+            # Stable softmax: shift by max(score) so all logits are <= 0.
+            logits = self.epsilon * (score_array - np.max(score_array)) / (2.0 * sensitivity)
+            weights = np.exp(logits)
+            weight_sum = float(np.sum(weights))
+            if (not np.isfinite(weight_sum)) or weight_sum <= 0:
+                p = np.full(length, 1.0 / length)
+            else:
+                p = weights / weight_sum
         # sample
         tmp = random.uniform(0, 1)
-        index_perturbed = None
-        for i in range(length):
-            if tmp <= sum(p[:i + 1]):
-                index_perturbed = i
-                break
+        cdf = np.cumsum(p)
+        # !!!
+        # Optimization: use searchsorted to find the index of the sampled location in O(log(length)) time
+        index_perturbed = int(np.searchsorted(cdf, tmp, side="right"))
+        if index_perturbed >= length:
+            index_perturbed = length - 1
         return location_list[index_perturbed]
 
     def srr_3_groups(self, groups: "list"):
@@ -176,11 +188,10 @@ class DiscreteMechanism:
         assert abs(sum(p) - 1) < 1e-2
         # sample
         tmp = random.uniform(0, 1)
-        index_perturbed = None
-        for i in range(3):
-            if tmp <= sum(p[:i + 1]):
-                index_perturbed = i
-                break
+        cdf = np.cumsum(p)
+        index_perturbed = int(np.searchsorted(cdf, tmp, side="right"))
+        if index_perturbed >= 3:
+            index_perturbed = 2
         # sample from the group
         res = random.choice(groups[index_perturbed])
         return res
