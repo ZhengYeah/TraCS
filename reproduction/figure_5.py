@@ -1,5 +1,10 @@
 import numpy as np
 from copy import deepcopy
+from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
 from src.methods.strawman import strawman_perturbation
 from src.utilities.trajectory_distance import averaged_l2_distance
 from src.perturbation_tracs import DirectionDistancePerturbation, CoordinatePerturbation

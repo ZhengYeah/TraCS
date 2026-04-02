@@ -1,6 +1,9 @@
 import pickle
 import numpy as np
 from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
 
 from src.methods.strawman import strawman_perturbation
 from src.methods.two_d_laplace import ldp_2d_laplace_batch
@@ -84,6 +87,7 @@ plt.xlabel(r'Privacy parameter $\varepsilon$')
 plt.ylabel(r"Average error")
 plt.legend()
 plt.title("Figure 7a")
+print("========")
 
 ########
 # Figure 7b

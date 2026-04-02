@@ -1,5 +1,10 @@
 import numpy as np
 from copy import deepcopy
+from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
 from src.methods.strawman import strawman_perturbation
 from src.methods.two_d_laplace import ldp_2d_laplace_batch
 from src.utilities.generate_random_traj import generate_random_traj
@@ -90,6 +95,7 @@ plt.xlabel(r'Privacy parameter $\varepsilon$')
 plt.ylabel(r"Average error")
 plt.legend()
 plt.title("Figure 4a")
+print("========")
 
 ########
 # Figure 4b

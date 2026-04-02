@@ -110,14 +110,14 @@ Functionality of the paper's main results can be done by running the following s
 ```
 AudAgent/ (project root)
 ├── reproduction/
-│   ├── figure_4.py: Figure 4 (Page 10) (≈20 seconds)
-│   ├── figure_5.py: Figure 5 (Page 10) (≈20 seconds)
-│   ├── figure_6.py: Figure 6 (Page 10) (≈20 seconds)
-│   ├── figure_7.py: Figure 7 (Page 11) (≈20 seconds)
-│   ├── figure_8.py: Figure 8 (Page 12) (≈20 seconds)
-│   ├── figure_9.py: Figure 9b (Page 12) (≈20 seconds)
-│   ├── table_3.py: Table 3 (Page 12) (≈20 seconds)
-│   ├── figure_10a.py, figure_10b.py: Figure 10 (Page 13) (≈20 seconds)
+│   ├── figure_4.py: Figure 4 (Page 10) (≈60 seconds)
+│   ├── figure_5.py: Figure 5 (Page 10) (≈10 seconds)
+│   ├── figure_6.py: Figure 6 (Page 10) (≈5 seconds)
+│   ├── figure_7.py: Figure 7 (Page 11) (≈4 minutes)
+│   ├── figure_8.py: Figure 8a (Page 12) (≈30 seconds)
+│   ├── figure_9.py: Figure 9b (Page 12) (≈30 seconds)
+│   ├── table_3.py: Table 3 (Page 12) (≈15 seconds)
+│   ├── figure_10a.py, figure_10b.py: Figure 10 (Page 13) (≈2 minutes)
 ```
 
 To reproduce the results, run these scripts using `uv run`. You don't need to manually activate a virtual environment, but ensure you're not already inside one. For example:
@@ -128,7 +128,7 @@ To reproduce the results, run these scripts using `uv run`. You don't need to ma
 will display the corresponding figures using matplotlib.
 
 #### Figures 4, 5, 6, 7: TraCS's Effectiveness in Continuous Spaces 
-- Time: ≈5 seconds
+- Time: ≈6 minutes
 
 Run the following four commands sequentially to reproduce these figures (in Page 10, 11), which compares the trajectory utility (averaged error) of TraCS with baseline methods in continuous spaces.
 
@@ -151,6 +151,15 @@ Run the following commands sequentially to reproduce these figures and table (in
 [PROJECT_ROOT]$ uv run ./reproduction/figure_10a.py
 [PROJECT_ROOT]$ uv run ./reproduction/figure_10b.py
 ```
+
+> Note: We omit the reproduction of Figure 8b and 9a, which are similar to Figure 8a and 9b, respectively.
+> You may observe the better time-cost results of discrete methods in Table 3 than those the paper. 
+> This is because we use Codex to optimize the sampling of the exponential mechanism, which uses `np.searchsorted` to find the sampled value, reducing the time cost from $O(n)$ to $O(\log n)$.
+> Nonetheless, the relative time cost of TraCS compared to existing methods is still significantly reduced, which supports our claim.
+
+## Limitations
+
+LDP mechanisms introduce randomness through sampling, which may cause slight variations in results across different runs (even after averaging). However, the overall trends should remain consistent with the figures reported in the paper.
 
 ## Notes on Reusability
 

@@ -1,4 +1,9 @@
 import numpy as np
+from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
 from src.utilities.discrete_location_space import discrete_location_grid
 from src.methods.ngram import ngram_perturb
 from src.methods.tp import tp_perturb

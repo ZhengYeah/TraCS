@@ -1,6 +1,9 @@
 import numpy as np
 import pickle
 from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_ROOT))
 
 from src.methods.ngram import ngram_perturb
 from src.methods.tp import tp_perturb
