@@ -105,20 +105,52 @@ This part corresponds to Section 4.2 and Figure 8, 9, 10, and Table 3.
 
 ### Experiments
 
-Functionality of the paper's main results can be done by running the following scripts:
+Functionality of the paper's main results can be done by running the following scripts in the `reproduction/` directory:
 
 ```
 AudAgent/ (project root)
-├── experiments/
-│   ├── continuous_space/
-│   │   ├── 1_privacy_policy_parsing/claude_stage_1.py  # for the evaluation of privacy policy formalization module (≈2 minutes)
-│   │   ├── 2_annotation/annotator_testing.py  # for the evaluation of data practice annotation module (≈1 minute)
-│   │   ├── 3_time_cost/time_cost_with_aud.py and time_cost_without_aud.py  # for the evaluation of real-time auditing module (≈2 minutes)
+├── reproduction/
+│   ├── figure_4.py: Figure 4 (Page 10) (≈20 seconds)
+│   ├── figure_5.py: Figure 5 (Page 10) (≈20 seconds)
+│   ├── figure_6.py: Figure 6 (Page 10) (≈20 seconds)
+│   ├── figure_7.py: Figure 7 (Page 11) (≈20 seconds)
+│   ├── figure_8.py: Figure 8 (Page 12) (≈20 seconds)
+│   ├── figure_9.py: Figure 9b (Page 12) (≈20 seconds)
+│   ├── table_3.py: Table 3 (Page 12) (≈20 seconds)
+│   ├── figure_10a.py, figure_10b.py: Figure 10 (Page 13) (≈20 seconds)
 ```
 
-You don't need to manually activate a virtual environment, but ensure you're not already inside one.
+To reproduce the results, run these scripts using `uv run`. You don't need to manually activate a virtual environment, but ensure you're not already inside one. For example:
 
+```bash
+[PROJECT_ROOT]$ uv run ./reproduction/figure_4.py
+```
+will display the corresponding figures using matplotlib.
 
+#### Figures 4, 5, 6, 7: TraCS's Effectiveness in Continuous Spaces 
+- Time: ≈5 seconds
+
+Run the following four commands sequentially to reproduce these figures (in Page 10, 11), which compares the trajectory utility (averaged error) of TraCS with baseline methods in continuous spaces.
+
+```bash
+[PROJECT_ROOT]$ uv run ./reproduction/figure_4.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_5.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_6.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_7.py
+```
+
+#### Figures 8, 9, 10 and Table 3: TraCS's Effectiveness and Efficiency in Discrete Spaces
+- Time: ≈5 seconds
+
+Run the following commands sequentially to reproduce these figures and table (in Page 12, 13), which compares the trajectory utility and time cost of TraCS with existing methods in discrete spaces.
+
+```bash
+[PROJECT_ROOT]$ uv run ./reproduction/figure_8.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_9.py
+[PROJECT_ROOT]$ uv run ./reproduction/table_3.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_10a.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_10b.py
+```
 
 ## Notes on Reusability
 
