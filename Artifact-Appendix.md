@@ -143,7 +143,7 @@ Run the following four commands sequentially to reproduce these figures (in Page
 ```
 
 #### Figures 8, 9, 10 and Table 3: TraCS's Effectiveness and Efficiency in Discrete Spaces
-- Time: ≈5 seconds
+- Time: ≈5 minutes
 
 Run the following commands sequentially to reproduce these figures and table (in Page 12, 13), which compares the trajectory utility and time cost of TraCS with existing methods in discrete spaces.
 
