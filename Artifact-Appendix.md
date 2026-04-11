@@ -120,7 +120,7 @@ AudAgent/ (project root)
 │   ├── figure_8.py: Figure 8a (Page 12) (≈30 seconds)
 │   ├── figure_9.py: Figure 9b (Page 12) (≈30 seconds)
 │   ├── table_3.py: Table 3 (Page 12) (≈15 seconds)
-│   ├── figure_10a.py, figure_10b.py: Figure 10 (Page 13) (≈2 minutes)
+│   ├── figure_10_a.py, figure_10_b.py: Figure 10 (Page 13) (≈2 minutes)
 ```
 
 To reproduce the results, run these scripts using `uv run`. You don't need to manually activate a virtual environment, but ensure you're not already inside one. For example:
@@ -151,8 +151,8 @@ Run the following commands sequentially to reproduce these figures and table (in
 [PROJECT_ROOT]$ uv run ./reproduction/figure_8.py
 [PROJECT_ROOT]$ uv run ./reproduction/figure_9.py
 [PROJECT_ROOT]$ uv run ./reproduction/table_3.py
-[PROJECT_ROOT]$ uv run ./reproduction/figure_10a.py
-[PROJECT_ROOT]$ uv run ./reproduction/figure_10b.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_10_a.py
+[PROJECT_ROOT]$ uv run ./reproduction/figure_10_b.py
 ```
 
 > Note: We omit the reproduction of Figure 8b and 9a, which are similar to Figure 8a and 9b, respectively.
